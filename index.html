@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BibleSense — Bible, but it actually makes sense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #050a30;
+      --light-blue: #9bd4e4;
+      --light-blue-soft: #dff5fb;
+      --white: #ffffff;
+      --bg: #f5fbfd;
+      --text: #1a1f2e;
+      --muted: #5c6478;
+      --shadow: 0 24px 64px rgba(5, 10, 48, 0.08);
+      --shadow-hover: 0 32px 80px rgba(5, 10, 48, 0.12);
+      --radius-lg: 28px;
+      --radius-xl: 36px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-serif {
+      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    }
+
+    /* ---- Floating particles (decorative) ---- */
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(155, 212, 228, 0.35), rgba(255, 255, 255, 0.2));
+      animation: float 18s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.45; }
+      50% { transform: translate(12px, -20px) scale(1.1); opacity: 0.75; }
+    }
+    @keyframes float-slow {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-8px, 12px); }
+    }
+    @keyframes cta-glow-pulse {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.04); }
+    }
+    @keyframes cta-btn-breathe {
+      0%, 100% { box-shadow: 0 4px 24px rgba(5, 10, 48, 0.2), 0 0 0 0 rgba(155, 212, 228, 0.25); }
+      50% { box-shadow: 0 6px 32px rgba(5, 10, 48, 0.12), 0 0 28px 2px rgba(120, 200, 230, 0.35); }
+    }
+    @keyframes phone-drift {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -11px, 0); }
+    }
+    .sparkle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--light-blue);
+      border-radius: 50%;
+      opacity: 0.35;
+      animation: float-slow 10s ease-in-out infinite;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .container { padding: 0 2rem; }
+    }
+
+    /* ---- Header ---- */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245, 251, 253, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(155, 212, 228, 0.25);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.7rem 0 0.85rem;
+    }
+    @media (min-width: 1024px) {
+      .header-inner { padding: 0.85rem 0 1rem; }
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+    .logo-link img {
+      height: 56px;
+      width: auto;
+      max-width: min(280px, 65vw);
+      object-fit: contain;
+      object-position: left center;
+    }
+    @media (min-width: 640px) {
+      .logo-link img { height: 64px; max-width: 300px; }
+    }
+    @media (min-width: 1024px) {
+      .logo-link img { height: 72px; max-width: 320px; }
+    }
+    .nav-desktop {
+      display: none;
+      align-items: center;
+      gap: 2rem;
+    }
+    @media (min-width: 1024px) {
+      .nav-desktop { display: flex; }
+    }
+    .nav-desktop a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .nav-desktop a:hover {
+      color: var(--navy);
+    }
+    .header-cta {
+      display: none;
+    }
+    @media (min-width: 1024px) {
+      .header-cta { display: inline-flex; }
+    }
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.65rem 1.4rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: box-shadow 0.25s, transform 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .btn-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(155, 212, 228, 0.45);
+    }
+    .btn-pill--primary {
+      background: var(--light-blue);
+      color: var(--navy);
+    }
+    .btn-pill--ghost {
+      background: var(--white);
+      color: var(--navy);
+      border: 1.5px solid rgba(5, 10, 48, 0.12);
+    }
+    .btn-pill--ghost:hover {
+      border-color: var(--light-blue);
+    }
+    .btn-pill--navy {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .btn-pill--navy:hover {
+      box-shadow: 0 8px 24px rgba(5, 10, 48, 0.35);
+    }
+    .nav-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: var(--white);
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(5, 10, 48, 0.08);
+    }
+    @media (min-width: 1024px) {
+      .nav-toggle { display: none; }
+    }
+    .nav-mobile {
+      display: none;
+      border-top: 1px solid rgba(155, 212, 228, 0.25);
+      padding: 1rem 0 1.25rem;
+    }
+    .nav-mobile.is-open { display: block; }
+    @media (min-width: 1024px) {
+      .nav-mobile { display: none !important; }
+    }
+    .nav-mobile a {
+      display: block;
+      padding: 0.65rem 0;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .nav-mobile .btn-pill {
+      width: 100%;
+      margin-top: 0.75rem;
+    }
+
+    /* ---- Hero ---- */
+    .hero {
+      padding: 3.75rem 0 4.5rem;
+      position: relative;
+    }
+    @media (min-width: 1024px) {
+      .hero { padding: 5rem 0 5.5rem; }
+    }
+    .hero-grid {
+      display: grid;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    @media (min-width: 640px) {
+      .hero-grid { gap: 3rem; }
+    }
+    @media (min-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr 1.05fr;
+        gap: 2.5rem 3rem;
+        align-items: center;
+      }
+    }
+    .hero .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(155, 212, 228, 0.55);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      color: var(--navy);
+      margin-bottom: 1.75rem;
+      box-shadow: 0 4px 24px rgba(155, 212, 228, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.2vw, 3.75rem);
+      line-height: 1.04;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      max-width: 14em;
+      background: linear-gradient(165deg, #0c1838 0%, #080f28 40%, #020617 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: var(--navy);
+    }
+    @supports not (background-clip: text) {
+      .hero h1 { -webkit-text-fill-color: var(--navy); color: var(--navy); }
+    }
+    .hero .lead {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 33rem;
+      margin-bottom: 2rem;
+    }
+    .hero-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem 1rem;
+      margin-bottom: 2.25rem;
+    }
+    .hero .hero-btns .btn-pill {
+      box-shadow: 0 6px 20px rgba(5, 10, 48, 0.1);
+    }
+    .hero .hero-btns .btn-pill--primary {
+      box-shadow: 0 8px 28px rgba(91, 170, 195, 0.35), 0 2px 8px rgba(5, 10, 48, 0.08);
+    }
+    .hero .hero-btns .btn-pill--ghost {
+      box-shadow: 0 6px 20px rgba(5, 10, 48, 0.07);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .btn-large {
+      padding: 0.9rem 1.6rem;
+      font-size: 1rem;
+      border-radius: 9999px;
+    }
+    .btn-large.btn-pill--primary {
+      min-width: 9rem;
+    }
+    .hero .highlights {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem 0.9rem;
+      padding: 1.1rem 1.15rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(155, 212, 228, 0.45);
+      box-shadow: 0 4px 32px rgba(155, 212, 228, 0.12);
+      backdrop-filter: blur(14px) saturate(1.1);
+      -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    }
+    @media (min-width: 480px) {
+      .hero .highlights { gap: 0.7rem 1.1rem; }
+    }
+    .hero .highlight {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #4a5064;
+    }
+    .hero .highlight .hi-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 2px 12px rgba(5, 10, 48, 0.05);
+      flex-shrink: 0;
+      color: var(--navy);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .phone-drift { animation: none !important; }
+    }
+
+    /* Phone mockup stack — iPhone Pro–style: titanium chrome + island */
+    .hero-phones {
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (min-width: 1024px) {
+      .hero-phones { min-height: 540px; }
+    }
+    .hero-phones::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      width: min(105vw, 560px);
+      height: 480px;
+      background: radial-gradient(ellipse 50% 48% at 50% 48%,
+        rgba(120, 210, 240, 0.38) 0%,
+        rgba(180, 230, 250, 0.22) 40%,
+        rgba(250, 252, 255, 0.1) 62%,
+        transparent 75%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .phone-glow {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      width: 480px;
+      height: 480px;
+      max-width: 95vw;
+      background: radial-gradient(circle,
+        rgba(155, 220, 245, 0.55) 0%,
+        rgba(200, 235, 250, 0.32) 32%,
+        rgba(255, 255, 255, 0.18) 50%,
+        transparent 70%);
+      border-radius: 50%;
+      filter: blur(16px);
+      z-index: 0;
+    }
+    .phone-glow::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 55%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .phone-drift {
+      will-change: transform;
+      animation: phone-drift 8.5s ease-in-out infinite;
+    }
+    .phone--front .phone-drift {
+      animation-duration: 7.2s;
+      animation-delay: 0.5s;
+    }
+    .device-iphone {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      filter:
+        drop-shadow(0 22px 44px rgba(155, 212, 228, 0.32))
+        drop-shadow(0 10px 28px rgba(5, 10, 48, 0.12));
+    }
+    /* Starlight / silver — latest iPhone–style shell, not black */
+    .device-iphone__chassis {
+      border-radius: 2.55rem;
+      padding: 2px;
+      background: linear-gradient(165deg,
+        #ffffff 0%,
+        #e8e8ed 14%,
+        #f7f7f9 32%,
+        #d2d2d8 52%,
+        #fafbfd 72%,
+        #c6c6cc 100%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.98) inset,
+        0 2px 4px rgba(0, 0, 0, 0.05) inset,
+        0 1px 0 rgba(255, 255, 255, 0.85) inset,
+        0 28px 56px -14px rgba(5, 10, 48, 0.16);
+    }
+    .device-iphone__bezel {
+      border-radius: 2.38rem;
+      padding: 1px;
+      background: linear-gradient(180deg, #2a2a2c 0%, #0e0e0f 100%);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+    .device-iphone__screen {
+      border-radius: 2.2rem;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+      aspect-ratio: 9 / 19.2;
+    }
+    .device-iphone__island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 34%;
+      max-width: 120px;
+      height: 28px;
+      background: linear-gradient(180deg, #232325 0%, #101012 100%);
+      border-radius: 20px;
+      z-index: 4;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(100, 100, 110, 0.2) inset;
+    }
+    .device-iphone__image {
+      position: absolute;
+      inset: 0;
+    }
+    .device-iphone__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .device-iphone__btn {
+      position: absolute;
+      z-index: 6;
+      width: 2px;
+      background: linear-gradient(180deg, #e2e2e7, #b8b8c0);
+      box-shadow: 0.5px 0 0 rgba(255, 255, 255, 0.45) inset, -0.5px 0 0.5px rgba(0, 0, 0, 0.12);
+      border-radius: 1px 0 0 1px;
+      opacity: 0.92;
+    }
+    .device-iphone--hero .device-iphone__btn--mute {
+      left: -2px;
+      top: 19%;
+      height: 20px;
+    }
+    .device-iphone--hero .device-iphone__btn--v1 {
+      left: -2px;
+      top: 25.5%;
+      height: 34px;
+    }
+    .device-iphone--hero .device-iphone__btn--v2 {
+      left: -2px;
+      top: 33.5%;
+      height: 34px;
+    }
+    .device-iphone--hero .device-iphone__btn--power {
+      left: auto;
+      right: -2px;
+      top: 25%;
+      height: 58px;
+      border-radius: 0 1px 1px 0;
+      background: linear-gradient(180deg, #dcdce1, #b0b0b8);
+      box-shadow: -0.5px 0 0 rgba(255, 255, 255, 0.35) inset, 0.5px 0 0.5px rgba(0, 0, 0, 0.12);
+    }
+    .phone {
+      position: relative;
+      z-index: 1;
+      width: 220px;
+    }
+    .phone--back {
+      position: absolute;
+      right: 6%;
+      top: 10%;
+      z-index: 0;
+      width: 220px;
+      transform: rotate(-6deg) translateY(20px);
+      opacity: 0.99;
+    }
+    .phone--back .device-iphone { transition: filter 0.4s ease, transform 0.4s ease; }
+    .phone--front {
+      position: relative;
+      z-index: 2;
+      left: 0;
+      margin-left: -5%;
+      transform: rotate(4deg) translateX(-8px);
+    }
+    .phone--front .device-iphone { transition: filter 0.4s ease, transform 0.4s ease; }
+    @media (min-width: 1024px) {
+      .phone,
+      .phone--back {
+        width: 248px;
+      }
+      .phone--back { right: 4%; }
+    }
+    .phone--back:hover .device-iphone,
+    .phone--front:hover .device-iphone {
+      transform: scale(1.02);
+      filter:
+        drop-shadow(0 28px 50px rgba(155, 212, 228, 0.38))
+        drop-shadow(0 12px 32px rgba(5, 10, 48, 0.15));
+    }
+    .hero-badge {
+      position: absolute;
+      bottom: 8%;
+      right: 2%;
+      z-index: 4;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.4rem;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+      color: var(--navy);
+      box-shadow: 0 16px 40px rgba(5, 10, 48, 0.18);
+      border: 2px solid var(--light-blue);
+    }
+    .hero-badge svg { margin-bottom: 4px; opacity: 0.85; }
+
+    /* ---- Section common ---- */
+    .section {
+      padding: 5rem 0;
+    }
+    @media (min-width: 768px) {
+      .section { padding: 6.25rem 0; }
+    }
+    @media (min-width: 1200px) {
+      .section { padding: 6.75rem 0; }
+    }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #4a7e96;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 36rem;
+    }
+
+    /* ---- Features grid ---- */
+    .features {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--white) 40%, var(--bg) 100%);
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    @media (min-width: 640px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.6rem 1.5rem;
+      }
+    }
+    @media (min-width: 1024px) {
+      .feature-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.75rem 1.5rem;
+      }
+    }
+    @media (min-width: 1280px) {
+      .feature-grid { gap: 2rem 1.75rem; }
+    }
+    .feature-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.6rem 1.4rem;
+      box-shadow: 0 12px 40px -8px rgba(5, 10, 48, 0.07);
+      border: 1px solid rgba(155, 212, 228, 0.35);
+      transition: transform 0.3s ease, box-shadow 0.35s ease, border-color 0.3s ease;
+      position: relative;
+    }
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      opacity: 0;
+      pointer-events: none;
+      background: radial-gradient(120% 80% at 50% 0%, rgba(155, 212, 228, 0.22) 0%, transparent 55%);
+      transition: opacity 0.35s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        0 28px 56px -16px rgba(5, 10, 48, 0.14),
+        0 12px 24px -8px rgba(5, 10, 48, 0.08),
+        0 0 48px -4px rgba(120, 200, 230, 0.35);
+      border-color: rgba(155, 212, 228, 0.65);
+    }
+    .feature-card:hover::after {
+      opacity: 1;
+    }
+    .feature-icon {
+      position: relative;
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.05rem;
+      font-size: 1.65rem;
+      line-height: 1;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(5, 10, 48, 0.04),
+        0 4px 14px rgba(5, 10, 48, 0.06);
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+    }
+    .feature-card:hover .feature-icon {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(5, 10, 48, 0.05),
+        0 0 0 1px rgba(155, 212, 228, 0.35) inset,
+        0 8px 28px rgba(100, 190, 220, 0.22);
+      transform: scale(1.04);
+      filter: saturate(1.05);
+    }
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+    .feature-card p {
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .mini-badge {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #2d5a3d;
+      background: #e3f4e7;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+    }
+
+    /* ---- Real Talk emotional band (between features & themes) ---- */
+    @keyframes emotive-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.35; }
+      50% { transform: translate(10px, -14px) scale(1.05); opacity: 0.75; }
+    }
+    .emotive-real-talk {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      padding: clamp(3.5rem, 8vw, 6rem) 0;
+      background: linear-gradient(168deg, #050a30 0%, #03061c 42%, #01030a 100%);
+      border-top: 1px solid rgba(155, 212, 228, 0.1);
+      border-bottom: 1px solid rgba(155, 212, 228, 0.08);
+    }
+    .emotive-real-talk::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% 20%, rgba(60, 100, 140, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 80% 85%, rgba(155, 212, 228, 0.06) 0%, transparent 45%);
+    }
+    .emotive-real-talk::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 75% 65% at 50% 50%, transparent 35%, rgba(0, 0, 0, 0.45) 100%);
+      opacity: 0.65;
+    }
+    .emotive-real-talk__particles {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .emotive-particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(155, 212, 228, 0.25) 0%, rgba(155, 212, 228, 0) 70%);
+      animation: emotive-drift 20s ease-in-out infinite;
+    }
+    .emotive-sparkle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(220, 245, 255, 0.45);
+      box-shadow: 0 0 6px rgba(155, 212, 228, 0.4);
+      animation: emotive-drift 14s ease-in-out infinite;
+    }
+    .emotive-real-talk .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 42rem;
+    }
+    .emotive-real-talk h2 {
+      font-size: clamp(1.9rem, 4.2vw, 2.85rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.1rem;
+      text-shadow: 0 2px 28px rgba(155, 212, 228, 0.12);
+    }
+    .emotive-real-talk .emotive-lead {
+      font-size: 1.08rem;
+      line-height: 1.65;
+      color: rgba(232, 238, 255, 0.78);
+      margin-bottom: 2.25rem;
+      max-width: 36rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .real-talk-mock {
+      max-width: 32rem;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 1rem 1.2rem 1rem 1rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(155, 212, 228, 0.22);
+      box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .real-talk-mock:focus-within {
+      border-color: rgba(155, 212, 228, 0.4);
+      box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(155, 212, 228, 0.12),
+        0 0 40px -8px rgba(100, 180, 210, 0.2);
+    }
+    .real-talk-mock__icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, rgba(155, 212, 228, 0.2), rgba(80, 120, 160, 0.15));
+      color: rgba(200, 235, 250, 0.95);
+    }
+    .real-talk-mock input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.98rem;
+      font-family: inherit;
+      outline: none;
+      cursor: default;
+    }
+    .real-talk-mock input::placeholder {
+      color: rgba(200, 215, 235, 0.55);
+      font-style: italic;
+    }
+    .emotive-real-talk__note {
+      margin-top: 1.15rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      color: rgba(180, 200, 225, 0.45);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .emotive-particle,
+      .emotive-sparkle { animation: none !important; opacity: 0.5; }
+    }
+
+    /* ---- Themes (dark) — showcase strip ---- */
+    .themes-block {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(165deg, #050a30 0%, #0a1238 38%, #030818 100%);
+      padding: 2.75rem 1.5rem 2.75rem;
+      color: var(--white);
+      border: 1px solid rgba(155, 212, 228, 0.14);
+      box-shadow:
+        0 40px 100px rgba(5, 10, 48, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .themes-block::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 85% 45% at 12% 8%, rgba(100, 190, 230, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 88% 15%, rgba(130, 110, 200, 0.09) 0%, transparent 50%),
+        radial-gradient(ellipse 55% 40% at 50% 100%, rgba(5, 15, 40, 0.5) 0%, transparent 60%);
+    }
+    .themes-block > * {
+      position: relative;
+      z-index: 1;
+    }
+    @media (min-width: 768px) {
+      .themes-block { padding: 3.75rem 2.5rem 3.5rem; }
+    }
+    .themes-block .section-label { color: var(--light-blue); opacity: 0.95; }
+    .themes-block .section-title {
+      color: var(--white);
+      text-shadow: 0 2px 24px rgba(0, 0, 0, 0.25);
+    }
+    .themes-block .section-desc { color: rgba(255, 255, 255, 0.7); }
+    .theme-phones {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      column-gap: 1.1rem;
+      row-gap: 0.5rem;
+      margin-top: 3rem;
+      padding: 0.75rem 0 0.5rem;
+      align-items: end;
+    }
+    @media (min-width: 1280px) {
+      .theme-phones { column-gap: 1.4rem; }
+    }
+    @media (max-width: 1024px) {
+      .theme-phones {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        justify-content: flex-start;
+        gap: 1.1rem;
+        margin-top: 3rem;
+        padding: 0.75rem 0 0.5rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        margin-left: -0.15rem;
+        margin-right: -0.15rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+    }
+    .theme-phones::-webkit-scrollbar { height: 6px; }
+    .theme-phones::-webkit-scrollbar-thumb { background: rgba(155, 212, 228, 0.35); border-radius: 4px; }
+    .theme-item {
+      min-width: 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      padding: 0.4rem 0.15rem 0;
+      --glow-r: 155;
+      --glow-g: 212;
+      --glow-b: 228;
+    }
+    .theme-item--classic {
+      --glow-r: 212; --glow-g: 175; --glow-b: 120;
+    }
+    .theme-item--blue-azure {
+      --glow-r: 120; --glow-g: 200; --glow-b: 235;
+    }
+    .theme-item--midnight {
+      --glow-r: 100; --glow-g: 130; --glow-b: 255;
+    }
+    .theme-item--vivid {
+      --glow-r: 180; --glow-g: 100; --glow-b: 220;
+    }
+    .theme-item--neon {
+      --glow-r: 236; --glow-g: 100; --glow-b: 255;
+    }
+    .theme-item::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 58%;
+      width: 100%;
+      max-width: 140px;
+      height: 3.2rem;
+      transform: translate(-50%, -30%);
+      background: radial-gradient(ellipse 65% 45% at 50% 100%,
+        rgba(var(--glow-r), var(--glow-g), var(--glow-b), 0.55) 0%,
+        rgba(var(--glow-r), var(--glow-g), var(--glow-b), 0.2) 45%,
+        transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+      filter: blur(2px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .theme-item:hover::before {
+      transform: translate(-50%, -32%) scale(1.08);
+    }
+    @media (max-width: 1024px) {
+      .theme-item {
+        flex: 0 0 auto;
+        width: clamp(110px, 24vw, 140px);
+        min-width: 110px;
+        max-width: 140px;
+        scroll-snap-align: start;
+      }
+    }
+    .theme-item .phone-mini.device-iphone {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: none;
+      margin: 0 0 0.7rem;
+      filter:
+        drop-shadow(0 20px 36px rgba(0, 0, 0, 0.45))
+        drop-shadow(0 0 32px rgba(var(--glow-r), var(--glow-g), var(--glow-b), 0.28));
+      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.45s ease;
+    }
+    .theme-item:hover .phone-mini.device-iphone {
+      filter:
+        drop-shadow(0 28px 44px rgba(0, 0, 0, 0.5))
+        drop-shadow(0 0 48px rgba(var(--glow-r), var(--glow-g), var(--glow-b), 0.45));
+    }
+    .theme-item--classic .phone-mini { transform: rotate(-2.2deg); }
+    .theme-item--blue-azure .phone-mini { transform: rotate(1.8deg); }
+    .theme-item--midnight .phone-mini { transform: rotate(-1.2deg); }
+    .theme-item--vivid .phone-mini { transform: rotate(2deg); }
+    .theme-item--neon .phone-mini { transform: rotate(-1.6deg); }
+    .theme-item--classic:hover .phone-mini { transform: rotate(-2.2deg) scale(1.06); }
+    .theme-item--blue-azure:hover .phone-mini { transform: rotate(1.8deg) scale(1.06); }
+    .theme-item--midnight:hover .phone-mini { transform: rotate(-1.2deg) scale(1.06); }
+    .theme-item--vivid:hover .phone-mini { transform: rotate(2deg) scale(1.06); }
+    .theme-item--neon:hover .phone-mini { transform: rotate(-1.6deg) scale(1.06); }
+    @media (prefers-reduced-motion: reduce) {
+      .theme-item .phone-mini { transform: none !important; }
+      .theme-item:hover .phone-mini { transform: none !important; }
+    }
+    .device-iphone--compact .device-iphone__chassis {
+      border-radius: 1.35rem;
+      padding: 1.5px;
+    }
+    .device-iphone--compact .device-iphone__bezel {
+      border-radius: 1.2rem;
+      padding: 1px;
+    }
+    .device-iphone--compact .device-iphone__screen {
+      border-radius: 1.02rem;
+      aspect-ratio: 9 / 19.2;
+    }
+    .device-iphone--compact .device-iphone__island {
+      top: 6px;
+      width: 36%;
+      max-width: 52px;
+      height: 13px;
+      border-radius: 8px;
+    }
+    .device-iphone--compact .device-iphone__btn { display: none; }
+    .device-iphone--compact .device-iphone__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    .theme-item span {
+      position: relative;
+      z-index: 1;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.3;
+      transition: color 0.3s ease, letter-spacing 0.3s ease;
+    }
+    .theme-item:hover span {
+      color: rgba(255, 255, 255, 0.98);
+      letter-spacing: 0.06em;
+    }
+
+    /* ---- Topics ---- */
+    .topic-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 0.9rem;
+      margin-top: 2.25rem;
+      justify-content: center;
+    }
+    @media (min-width: 480px) {
+      .topic-cloud { gap: 0.8rem 1rem; }
+    }
+    @media (min-width: 768px) {
+      .topic-cloud {
+        justify-content: flex-start;
+        gap: 0.85rem 1.1rem;
+      }
+    }
+    .topic-pill {
+      display: inline-block;
+      padding: 0.6rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.86rem;
+      font-weight: 500;
+      background: var(--white);
+      border: 1px solid rgba(155, 212, 228, 0.5);
+      color: var(--navy);
+      box-shadow: 0 2px 12px rgba(5, 10, 48, 0.05);
+      cursor: default;
+      transition:
+        transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+    .topic-pill:hover {
+      transform: scale(1.05);
+      background: rgba(155, 212, 228, 0.22);
+      border-color: rgba(120, 200, 230, 0.75);
+      box-shadow:
+        0 0 0 1px rgba(155, 212, 228, 0.35) inset,
+        0 0 24px -4px rgba(120, 200, 235, 0.45),
+        0 6px 20px rgba(5, 10, 48, 0.08);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .topic-pill { transition: background 0.2s, border-color 0.2s, box-shadow 0.2s; }
+      .topic-pill:hover { transform: none; }
+    }
+
+    /* ---- Pricing ---- */
+    .pricing-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      align-items: stretch;
+    }
+    @media (min-width: 900px) {
+      .pricing-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.14fr) minmax(0, 1fr);
+        gap: 1.35rem;
+        align-items: stretch;
+      }
+    }
+    @media (min-width: 1100px) {
+      .pricing-row { gap: 1.5rem; }
+    }
+    .price-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(155, 212, 228, 0.45);
+      box-shadow: var(--shadow);
+      position: relative;
+      transition: transform 0.25s, box-shadow 0.25s;
+      z-index: 1;
+    }
+    .price-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    .price-card--featured {
+      z-index: 2;
+      padding: 2.45rem 1.75rem;
+      border: 2px solid rgba(130, 195, 225, 0.55);
+      background: linear-gradient(180deg, #ffffff 0%, #fafdff 100%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.9) inset,
+        0 0 0 3px rgba(120, 200, 230, 0.2),
+        0 0 40px -6px rgba(100, 190, 220, 0.4),
+        0 16px 48px -8px rgba(5, 10, 48, 0.14),
+        0 32px 64px -12px rgba(5, 10, 48, 0.12);
+    }
+    .price-card--featured:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.95) inset,
+        0 0 0 3px rgba(120, 200, 230, 0.28),
+        0 0 52px -4px rgba(90, 185, 215, 0.45),
+        0 20px 52px -8px rgba(5, 10, 48, 0.16),
+        0 36px 72px -12px rgba(5, 10, 48, 0.14);
+    }
+    @media (min-width: 900px) {
+      .price-card--featured {
+        margin-top: -0.35rem;
+        margin-bottom: -0.35rem;
+      }
+    }
+    .best-badge {
+      position: absolute;
+      top: -14px;
+      right: 1.25rem;
+      background: linear-gradient(165deg, #0c1848 0%, #020510 100%);
+      color: #dff6fb;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      padding: 0.5rem 1.05rem;
+      border-radius: 10px;
+      border: 1px solid rgba(155, 212, 228, 0.45);
+      box-shadow:
+        0 2px 0 rgba(255, 255, 255, 0.1) inset,
+        0 6px 20px rgba(5, 10, 48, 0.45),
+        0 0 20px -2px rgba(120, 200, 230, 0.35);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+    .price-card--featured .btn-pill--navy {
+      background: linear-gradient(180deg, #0a1438 0%, #01040d 100%);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    .price-card--featured .btn-pill--navy:hover {
+      background: linear-gradient(180deg, #0f1f4a 0%, #020612 100%);
+      box-shadow: 0 6px 28px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(155, 212, 228, 0.15);
+    }
+    .price-card h3 {
+      font-size: 1.35rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .price-card--featured h3 {
+      font-size: 1.45rem;
+    }
+    .price-amount {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .price-card--featured .price-amount {
+      font-size: 1.72rem;
+    }
+    .price-amount small {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .price-list {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+    .price-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 0.55rem;
+    }
+    .price-list svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: #2d7a4e;
+    }
+    .price-card--upgrade {
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.35) 0%, transparent 45%),
+        linear-gradient(200deg, #e8f8fc 0%, var(--light-blue) 35%, #b8e4f0 70%, #e0f4fa 100%);
+      border: 1px solid rgba(155, 212, 228, 0.55);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 8px 28px rgba(5, 10, 48, 0.07);
+    }
+    .price-card--upgrade .upgrade-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--navy);
+      box-shadow: 0 4px 16px rgba(5, 10, 48, 0.08);
+    }
+    .price-card--upgrade p {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--navy);
+    }
+
+    /* ---- Final CTA (emotional close) ---- */
+    .final-cta {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(155deg, #060d32 0%, #050a30 40%, #020510 100%);
+      padding: 2.75rem 1.5rem;
+      color: var(--white);
+      display: grid;
+      gap: 1.5rem;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 32px 80px rgba(5, 10, 48, 0.32);
+    }
+    .final-cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 55% at 15% 20%, rgba(100, 160, 210, 0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 90% 75%, rgba(130, 100, 180, 0.1) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 30%, rgba(0, 0, 0, 0.25) 100%);
+    }
+    .final-cta::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      width: min(100%, 52rem);
+      height: 120%;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 58% 48% at 50% 45%, rgba(100, 190, 225, 0.18) 0%, rgba(80, 130, 180, 0.06) 45%, transparent 68%);
+    }
+    .final-cta__bloom {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      transform: translate(-50%, -50%);
+      width: min(92%, 40rem);
+      height: 10rem;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(200, 240, 255, 0.14) 0%, rgba(100, 190, 220, 0.06) 45%, transparent 70%);
+    }
+    .final-cta > *:not(.final-cta__bloom) {
+      position: relative;
+      z-index: 1;
+    }
+    @media (min-width: 900px) {
+      .final-cta {
+        grid-template-columns: auto 1fr auto;
+        text-align: left;
+        padding: 3.25rem 2.75rem;
+        gap: 2.75rem;
+      }
+    }
+    .final-cta .cta-icon {
+      position: relative;
+      z-index: 1;
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%, rgba(200, 235, 250, 0.45), rgba(30, 60, 100, 0.35) 55%, rgba(5, 10, 40, 0.95) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+        0 0 0 1px rgba(155, 212, 228, 0.15),
+        0 0 40px 2px rgba(100, 190, 220, 0.35),
+        0 0 64px 8px rgba(60, 140, 180, 0.15),
+        0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+    .final-cta .cta-icon::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow: 0 0 32px 6px rgba(140, 210, 235, 0.25);
+      z-index: -1;
+      animation: cta-glow-pulse 4.5s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .final-cta .cta-icon::after { animation: none; }
+      .final-cta .btn-pill--primary { animation: none !important; }
+    }
+    .final-cta h2 {
+      font-size: clamp(1.75rem, 3.6vw, 2.45rem);
+      line-height: 1.16;
+      font-weight: 600;
+      color: var(--white);
+      text-shadow: 0 2px 40px rgba(0, 0, 0, 0.25), 0 0 60px rgba(100, 180, 210, 0.12);
+    }
+    .final-cta p {
+      margin-top: 0.65rem;
+      font-size: 1.15rem;
+      line-height: 1.55;
+      color: rgba(240, 245, 255, 0.82);
+      text-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
+    }
+    .final-cta .btn-pill--primary {
+      animation: cta-btn-breathe 4s ease-in-out infinite;
+    }
+    .final-cta .cta-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    @media (min-width: 900px) {
+      .final-cta .cta-side { align-items: flex-end; }
+    }
+    .no-cc {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 0.4rem;
+    }
+
+    /* ---- Install (PWA) — simple, calm ---- */
+    .install-section {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--white) 45%, var(--bg) 100%);
+    }
+    .install-section .section-head {
+      text-align: center;
+      max-width: 32rem;
+      margin: 0 auto 1.5rem;
+    }
+    .install-no-store {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #2d4a5c;
+      background: rgba(155, 212, 228, 0.28);
+      border: 1px solid rgba(155, 212, 228, 0.55);
+      border-radius: 9999px;
+    }
+    .install-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    @media (min-width: 900px) {
+      .install-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        align-items: stretch;
+      }
+    }
+    .install-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(155, 212, 228, 0.4);
+      padding: 1.5rem 1.35rem 1.4rem;
+      box-shadow: 0 8px 32px rgba(5, 10, 48, 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .install-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px -8px rgba(5, 10, 48, 0.1), 0 0 40px -10px rgba(100, 190, 220, 0.2);
+      border-color: rgba(155, 212, 228, 0.65);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .install-card:hover { transform: none; }
+    }
+    .install-card__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.9rem;
+    }
+    .install-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #e8f6fb, #c8e8f2);
+      color: #1a4a5c;
+    }
+    .install-card__micro {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: #7a8a9a;
+      flex-shrink: 0;
+    }
+    .install-card__micro svg {
+      display: block;
+      opacity: 0.7;
+    }
+    .install-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.85rem;
+    }
+    .install-steps {
+      margin: 0;
+      padding: 0 0 0 1.1rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .install-steps li {
+      margin-bottom: 0.45rem;
+    }
+    .install-steps li:last-child {
+      margin-bottom: 0;
+    }
+    @media (min-width: 900px) {
+      .install-section .section-head { margin-bottom: 0.5rem; }
+    }
+
+    /* ---- Site footer ---- */
+    .site-footer {
+      margin-top: 0;
+      background: linear-gradient(180deg, #eef6fa 0%, var(--bg) 50%, #e8f4f8 100%);
+      border-top: 1px solid rgba(155, 212, 228, 0.35);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .site-footer a.site-footer__link {
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .site-footer a.site-footer__link:hover {
+      color: #9bd4e4;
+    }
+    .site-footer__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.25rem 1.5rem 2.5rem;
+      display: grid;
+      gap: 2.75rem 3rem;
+      text-align: center;
+    }
+    @media (min-width: 900px) {
+      .site-footer__inner {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+        text-align: left;
+        align-items: start;
+        padding: 3.5rem 2rem 2.75rem;
+        gap: 3rem 2.5rem;
+      }
+    }
+    @media (min-width: 1100px) {
+      .site-footer__inner { gap: 3rem 3.5rem; }
+    }
+    .site-footer__brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    @media (min-width: 900px) {
+      .site-footer__brand { align-items: flex-start; }
+    }
+    .site-footer__brand img {
+      height: 48px;
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+    }
+    @media (min-width: 640px) {
+      .site-footer__brand img { height: 52px; max-width: 240px; }
+    }
+    .site-footer__tagline {
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: #5c6478;
+      max-width: 22rem;
+    }
+    .site-footer__col-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4a5a6e;
+      margin-bottom: 1.1rem;
+    }
+    @media (min-width: 900px) {
+      .site-footer__col--legal .site-footer__col-title { text-align: left; }
+    }
+    .site-footer__emails {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    @media (min-width: 900px) {
+      .site-footer__emails { align-items: flex-start; }
+    }
+    .site-footer__email {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.86rem;
+      line-height: 1.4;
+      color: #3d4a5c;
+    }
+    @media (min-width: 900px) {
+      .site-footer__email { justify-content: flex-start; }
+    }
+    .site-footer__email svg {
+      flex-shrink: 0;
+      color: #7a92a3;
+    }
+    .site-footer__legal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      align-items: center;
+    }
+    @media (min-width: 900px) {
+      .site-footer__legal-list { align-items: flex-start; }
+    }
+    .site-footer__bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.75rem 1.5rem 2.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #7a8698;
+      border-top: 1px solid rgba(155, 212, 228, 0.22);
+    }
+    @media (min-width: 900px) {
+      .site-footer__bottom { padding: 1.75rem 2rem 2.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-bg" id="particles" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="header">
+      <div class="container header-inner">
+        <a class="logo-link" href="#top" aria-label="BibleSense home">
+          <img src="./public/BSNewLogotransparent2_512.png" alt="BibleSense" width="320" height="80" />
+        </a>
+        <nav class="nav-desktop" aria-label="Main">
+          <a href="#features">Features</a>
+          <a href="#premium">Premium</a>
+          <a href="#screenshots">Screenshots</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <a class="header-cta btn-pill btn-pill--primary" href="#cta">Download App</a>
+        <button class="nav-toggle" type="button" id="navToggle" aria-label="Open menu" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+      <div class="nav-mobile container" id="navMobile" aria-hidden="true">
+        <a href="#features">Features</a>
+        <a href="#premium">Premium</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn-pill btn-pill--primary" href="#cta">Download App</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="badge" aria-label="Tagline">✧ YOUR JOURNEY. GOD'S WORD. REAL LIFE.</p>
+            <h1 class="font-serif">Bible, but it actually makes sense.</h1>
+            <p class="lead">Read, reflect, and grow with personalized biblical guidance for real life. You're not alone—God's Word is here.</p>
+            <div class="hero-btns">
+              <a class="btn-pill btn-pill--primary btn-large" href="#cta">Start Free</a>
+              <a class="btn-pill btn-pill--ghost btn-large" href="#real-talk">Try Real Talk</a>
+            </div>
+            <div class="highlights">
+              <div class="highlight">
+                <span class="hi-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L4 6v6c0 5 3.4 9.2 8 10 4.6-.8 8-5 8-10V6l-8-4z"/></svg>
+                </span>
+                <span>Faith-Focused</span>
+              </div>
+              <div class="highlight">
+                <span class="hi-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M4.93 4.93l2.83 2.83M2 12h4M4.93 19.07l2.83-2.83M12 18v4M16.24 16.24l2.83 2.83M18 12h4M19.07 4.93l-2.83 2.83"/></svg>
+                </span>
+                <span>Real Talk Guidance</span>
+              </div>
+              <div class="highlight">
+                <span class="hi-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+                </span>
+                <span>Teen &amp; Young Adult Friendly</span>
+              </div>
+              <div class="highlight">
+                <span class="hi-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </span>
+                <span>100% Safe Space</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-phones" aria-hidden="true">
+            <div class="phone-glow"></div>
+            <!-- SS1 = “Make it make sense” / SS2 = Proverbs reader — swap filenames in public if yours differ -->
+            <div class="phone phone--back">
+              <div class="phone-drift">
+                <div class="device-iphone device-iphone--hero">
+                  <span class="device-iphone__btn device-iphone__btn--mute" aria-hidden="true"></span>
+                  <span class="device-iphone__btn device-iphone__btn--v1" aria-hidden="true"></span>
+                  <span class="device-iphone__btn device-iphone__btn--v2" aria-hidden="true"></span>
+                  <span class="device-iphone__btn device-iphone__btn--power" aria-hidden="true"></span>
+                  <div class="device-iphone__chassis">
+                    <div class="device-iphone__bezel">
+                      <div class="device-iphone__screen">
+                        <div class="device-iphone__island" aria-hidden="true"></div>
+                        <div class="device-iphone__image">
+                          <img src="./public/SS1.JPEG" alt="" width="400" height="800" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="phone phone--front">
+              <div class="phone-drift">
+                <div class="device-iphone device-iphone--hero">
+                  <span class="device-iphone__btn device-iphone__btn--mute" aria-hidden="true"></span>
+                  <span class="device-iphone__btn device-iphone__btn--v1" aria-hidden="true"></span>
+                  <span class="device-iphone__btn device-iphone__btn--v2" aria-hidden="true"></span>
+                  <span class="device-iphone__btn device-iphone__btn--power" aria-hidden="true"></span>
+                  <div class="device-iphone__chassis">
+                    <div class="device-iphone__bezel">
+                      <div class="device-iphone__screen">
+                        <div class="device-iphone__island" aria-hidden="true"></div>
+                        <div class="device-iphone__image">
+                          <img src="./public/SS2.JPEG" alt="" width="400" height="800" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              BUILT FOR REAL LIFE
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CORE FEATURES -->
+      <section class="section features" id="features">
+        <div class="container">
+          <p class="section-label">Core features</p>
+          <h2 class="section-title font-serif">Everything you need to grow in faith</h2>
+          <p class="section-desc">A complete toolkit to read, reflect, and walk with God—designed to feel as real as your life.</p>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #f0f7ff 0%, #c8dfff 45%, #a8d0f5 100%);">📖</div>
+              <h3>Bible Reader</h3>
+              <p>Multiple translations in a reader built for focus—not rush.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #fff9f0 0%, #f5d4b8 50%, #e8b88a 100%);">🔖</div>
+              <h3>Saved Verses</h3>
+              <p>Your favorites, one tap away—organized and always ready.</p>
+            </article>
+            <article class="feature-card" id="real-talk">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #f0fdf6 0%, #b8e5cc 48%, #7ec9a0 100%);">💬</div>
+              <h3>Real Talk AI</h3>
+              <p>Honest, Scripture-grounded perspective for what you’re facing.</p>
+              <span class="mini-badge">5/month free on Free</span>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #faf5ff 0%, #d4c4f5 50%, #b8a0e8 100%);">🧭</div>
+              <h3>Topics &amp; Help</h3>
+              <p>Help for anxiety, relationships, and identity when you need it most.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #f0f6ff 0%, #a8c8ff 50%, #7eb0f5 100%);">🎓</div>
+              <h3>Bible Studies</h3>
+              <p>Guided lessons and reflection—deeper than a quick scroll.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #fff8f4 0%, #ffd9cc 50%, #f5b8a0 100%);">🙏</div>
+              <h3>Prayer Journal</h3>
+              <p>Write to God. Trace prayers and see His faithfulness over time.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #f0fbff 0%, #9bd4e4 52%, #6bc4dc 100%);">🎮</div>
+              <h3>Games</h3>
+              <p>Trivia and memory games—fun, low-pressure, Scripture-centered.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon" style="background: linear-gradient(145deg, #faf5ff 0%, #e0d0ff 50%, #c8b0f0 100%);">🎨</div>
+              <h3>Themes</h3>
+              <p>Parchment, midnight, neon—make the app feel unmistakably yours.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="emotive-real-talk" id="real-life-guidance" aria-labelledby="emotive-title">
+        <div class="emotive-real-talk__particles" id="emotiveParticles" aria-hidden="true"></div>
+        <div class="container">
+          <h2 id="emotive-title" class="font-serif">Real guidance for real life.</h2>
+          <p class="emotive-lead">
+            Whatever you're facing, BibleSense helps you understand what God says—clearly and simply.
+          </p>
+          <div class="real-talk-mock">
+            <div class="real-talk-mock__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              readonly
+              tabindex="-1"
+              placeholder="I'm dealing with anxiety..."
+              value=""
+              aria-label="Example Real Talk prompt (preview, not connected to the app)"
+            />
+          </div>
+          <p class="emotive-real-talk__note">Preview only — opens in the app</p>
+        </div>
+      </section>
+
+      <!-- THEMES / SCREENSHOTS -->
+      <section class="section" id="screenshots">
+        <div class="container">
+          <div class="themes-block">
+            <p class="section-label" style="margin-bottom:0.35rem;">Make it yours</p>
+            <h2 class="section-title font-serif">5 Beautiful Themes</h2>
+            <p class="section-desc">Switch your look. Match your mood.</p>
+            <div class="theme-phones" role="list">
+              <div class="theme-item theme-item--classic" role="listitem">
+                <div class="phone-mini device-iphone device-iphone--compact">
+                  <div class="device-iphone__chassis">
+                    <div class="device-iphone__bezel">
+                      <div class="device-iphone__screen">
+                        <div class="device-iphone__island"></div>
+                        <div class="device-iphone__image">
+                          <img src="./public/ClassicTheme.JPEG" alt="Classic theme preview" width="360" height="768" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span>Classic</span>
+              </div>
+              <div class="theme-item theme-item--blue-azure" role="listitem">
+                <div class="phone-mini device-iphone device-iphone--compact">
+                  <div class="device-iphone__chassis">
+                    <div class="device-iphone__bezel">
+                      <div class="device-iphone__screen">
+                        <div class="device-iphone__island"></div>
+                        <div class="device-iphone__image">
+                          <img src="./public/BlueAzureTheme.PNG" alt="Blue Azure theme preview" width="360" height="768" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span>Blue Azure</span>
+              </div>
+              <div class="theme-item theme-item--midnight" role="listitem">
+                <div class="phone-mini device-iphone device-iphone--compact">
+                  <div class="device-iphone__chassis">
+                    <div class="device-iphone__bezel">
+                      <div class="device-iphone__screen">
+                        <div class="device-iphone__island"></div>
+                        <div class="device-iphone__image">
+                          <img src="./public/MidnightTheme.JPEG" alt="Midnight theme preview" width="360" height="768" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span>Midnight</span>
+              </div>
+              <div class="theme-item theme-item--vivid" role="listitem">
+                <div class="phone-mini device-iphone device-iphone--compact">
+                  <div class="device-iphone__chassis">
+                    <div class="device-iphone__bezel">
+                      <div class="device-iphone__screen">
+                        <div class="device-iphone__island"></div>
+                        <div class="device-iphone__image">
+                          <img src="./public/VividTheme.JPEG" alt="Vivid theme preview" width="360" height="768" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span>Vivid</span>
+              </div>
+              <div class="theme-item theme-item--neon" role="listitem">
+                <div class="phone-mini device-iphone device-iphone--compact">
+                  <div class="device-iphone__chassis">
+                    <div class="device-iphone__bezel">
+                      <div class="device-iphone__screen">
+                        <div class="device-iphone__island"></div>
+                        <div class="device-iphone__image">
+                          <img src="./public/NeonTheme.JPEG" alt="Neon theme preview" width="360" height="768" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span>Neon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOPICS -->
+      <section class="section" id="topics">
+        <div class="container">
+          <h2 class="section-title font-serif" style="text-align:center; max-width:none;">Whatever you're facing, there's help for that.</h2>
+          <div class="topic-cloud" role="list">
+            <span class="topic-pill" role="listitem">Anxiety</span>
+            <span class="topic-pill" role="listitem">Fear</span>
+            <span class="topic-pill" role="listitem">Friendship</span>
+            <span class="topic-pill" role="listitem">Peer Pressure</span>
+            <span class="topic-pill" role="listitem">Identity</span>
+            <span class="topic-pill" role="listitem">Anger</span>
+            <span class="topic-pill" role="listitem">Loneliness</span>
+            <span class="topic-pill" role="listitem">Confidence</span>
+            <span class="topic-pill" role="listitem">Forgiveness</span>
+            <span class="topic-pill" role="listitem">Purpose</span>
+            <span class="topic-pill" role="listitem">Self-Worth</span>
+            <span class="topic-pill" role="listitem">Trusting God</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING -->
+      <section class="section" id="premium">
+        <div class="container">
+          <p class="section-label">Simple pricing</p>
+          <h2 class="section-title font-serif">Start free. Go premium when you're ready.</h2>
+          <p class="section-desc">No pressure—just a path that grows with you.</p>
+          <div class="pricing-row">
+            <div class="price-card">
+              <h3>Free</h3>
+              <p class="price-amount">$0 <small>forever</small></p>
+              <ul class="price-list">
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Full Bible (KJV)
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Limited Saved Verses
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  5 Real Talk Reflections/month
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  3 Starter Bible Studies
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Prayer Journal (limited)
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Bible Trivia Game
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Classic Theme
+                </li>
+              </ul>
+              <a class="btn-pill btn-pill--ghost" href="#cta" style="width:100%;">Start Free</a>
+            </div>
+            <div class="price-card price-card--featured">
+              <span class="best-badge">BEST VALUE</span>
+              <h3>Premium</h3>
+              <p class="price-amount">$4.99<small> / month</small><small>or $39.99 / year</small></p>
+              <ul class="price-list">
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Everything in Free
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Unlimited Real Talk Reflections
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Unlimited Saved Verses
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Full Study Library
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  All Games
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Unlimited Prayer Journal
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  All 5 Themes
+                </li>
+              </ul>
+              <a class="btn-pill btn-pill--navy" href="#cta" style="width:100%;">Go Premium</a>
+            </div>
+            <div class="price-card price-card--upgrade">
+              <div class="upgrade-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 3h12l4 6-10 12L2 9l4-6z"/>
+                  <path d="M11 3h2"/>
+                </svg>
+              </div>
+              <p>Start free. Upgrade anytime. No pressure. Just progress.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INSTALL -->
+      <section class="section install-section" id="install">
+        <div class="container">
+          <div class="section-head">
+            <p class="section-label">Get the app on your device</p>
+            <h2 class="section-title font-serif">Add BibleSense in a few taps</h2>
+            <p class="section-desc" style="margin: 0 auto;">Same app—on your home screen. Nothing to download from an app store.</p>
+            <p class="install-no-store" role="status">No App Store Needed</p>
+          </div>
+          <div class="install-grid">
+            <article class="install-card">
+              <div class="install-card__top">
+                <div class="install-card__icon" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" />
+                    <path d="M12 18h.01" />
+                  </svg>
+                </div>
+                <div class="install-card__micro" aria-hidden="true" title="Share, then add">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v14"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                </div>
+              </div>
+              <h3 class="font-serif">iPhone &amp; iPad</h3>
+              <ol class="install-steps">
+                <li>Open BibleSense in <strong>Safari</strong>.</li>
+                <li>Tap the <strong>Share</strong> button <span aria-hidden="true">(</span>square with arrow up<span aria-hidden="true">)</span>.</li>
+                <li>Scroll and tap <strong>Add to Home Screen</strong>.</li>
+                <li>Tap <strong>Add</strong>—you’re ready to go.</li>
+              </ol>
+            </article>
+            <article class="install-card">
+              <div class="install-card__top">
+                <div class="install-card__icon" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </svg>
+                </div>
+                <div class="install-card__micro" aria-hidden="true" title="Menu, then install">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" /><path d="M12 18h.01" /></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                </div>
+              </div>
+              <h3 class="font-serif">Android</h3>
+              <ol class="install-steps">
+                <li>Open BibleSense in <strong>Chrome</strong>.</li>
+                <li>Tap the <strong>menu</strong> <span aria-hidden="true">(</span>three dots<span aria-hidden="true">)</span> in the corner.</li>
+                <li>Tap <strong>Install</strong> or <strong>Add to Home screen</strong>.</li>
+                <li>Confirm—BibleSense sits with your other apps.</li>
+              </ol>
+            </article>
+            <article class="install-card">
+              <div class="install-card__top">
+                <div class="install-card__icon" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8" />
+                    <path d="M9 7h6M9 11h4" />
+                  </svg>
+                </div>
+                <div class="install-card__micro" aria-hidden="true" title="Install from browser">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v14"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                </div>
+              </div>
+              <h3 class="font-serif">Computer</h3>
+              <ol class="install-steps">
+                <li>Open BibleSense in <strong>Chrome</strong> or <strong>Edge</strong>.</li>
+                <li>Click the <strong>install</strong> icon in the address bar when you see it.</li>
+                <li>Or use the <strong>menu</strong> and choose <strong>Install BibleSense</strong>.</li>
+                <li>Open it from your desktop or start menu—like any app.</li>
+              </ol>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ (standalone content, no app) -->
+      <section class="section" id="faq" style="padding-top:0;">
+        <div class="container" style="max-width: 720px;">
+          <h2 class="section-title font-serif" style="text-align:center;">FAQ</h2>
+          <div style="margin-top:1.5rem; display:grid; gap:1rem; color:var(--muted); font-size:0.95rem; line-height:1.6;">
+            <p><strong style="color:var(--navy);">Is BibleSense a replacement for church or a pastor?</strong><br/>No. It's a companion for daily study and reflection—your church community still matters.</p>
+            <p><strong style="color:var(--navy);">Do I need a credit card to start?</strong><br/>No. The Free plan includes core features with generous limits to get you started.</p>
+            <p><strong style="color:var(--navy);">Is my data private?</strong><br/>We take privacy seriously. Check our policies on your main site when you publish this page.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINAL CTA -->
+      <section class="section" id="cta" style="padding-top:0;">
+        <div class="container">
+          <div class="final-cta">
+            <div class="final-cta__bloom" aria-hidden="true"></div>
+            <div class="cta-icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M4 4v15.5A2.5 2.5 0 0 0 6.5 22H20V6a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4z"/>
+                <path d="M8 6h8"/>
+                <path d="M8 10h5"/>
+              </svg>
+            </div>
+            <div>
+              <h2 class="font-serif">You don't have to figure life out alone.</h2>
+              <p>God's Word has answers. Let's find them together.</p>
+            </div>
+            <div class="cta-side">
+              <a class="btn-pill btn-pill--primary btn-large" href="#top" style="min-width: 12rem;">Start Your Journey</a>
+              <span class="no-cc">No credit card required</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="site-footer__inner">
+        <div class="site-footer__brand">
+          <img src="./public/BSNewLogotransparent2_512.png" alt="BibleSense" width="240" height="64" />
+          <p class="site-footer__tagline">BibleSense — Real life. Real answers. Rooted in God&rsquo;s Word.</p>
+        </div>
+        <div class="site-footer__col site-footer__col--contact">
+          <p class="site-footer__col-title">Contact</p>
+          <div class="site-footer__emails">
+            <p class="site-footer__email">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <path d="M22 6l-10 7L2 6"/>
+              </svg>
+              <span>billing@zencora.org</span>
+            </p>
+            <p class="site-footer__email">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <path d="M22 6l-10 7L2 6"/>
+              </svg>
+              <span>support@zencora.org</span>
+            </p>
+            <p class="site-footer__email">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <path d="M22 6l-10 7L2 6"/>
+              </svg>
+              <span>help@zencora.org</span>
+            </p>
+          </div>
+        </div>
+        <div class="site-footer__col site-footer__col--legal">
+          <p class="site-footer__col-title">Legal</p>
+          <div class="site-footer__legal-list">
+            <a class="site-footer__link" href="#">Privacy Policy</a>
+            <a class="site-footer__link" href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <p>© 2026 Zencora. All Rights Reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById("particles");
+      if (!root) return;
+      for (var i = 0; i < 42; i++) {
+        var d = document.createElement("div");
+        d.className = Math.random() > 0.65 ? "sparkle" : "particle";
+        d.style.width = d.style.height = (2 + Math.random() * 5) + "px";
+        d.style.left = Math.random() * 100 + "%";
+        d.style.top = Math.random() * 100 + "%";
+        d.style.animationDelay = Math.random() * 12 + "s";
+        d.style.animationDuration = 14 + Math.random() * 18 + "s";
+        root.appendChild(d);
+      }
+    })();
+    (function () {
+      var root = document.getElementById("emotiveParticles");
+      if (!root) return;
+      for (var i = 0; i < 38; i++) {
+        var d = document.createElement("div");
+        d.className = Math.random() > 0.52 ? "emotive-sparkle" : "emotive-particle";
+        if (d.className === "emotive-particle") {
+          var s = 3 + Math.random() * 8;
+          d.style.width = s + "px";
+          d.style.height = s + "px";
+        }
+        d.style.left = Math.random() * 100 + "%";
+        d.style.top = Math.random() * 100 + "%";
+        d.style.animationDelay = Math.random() * 16 + "s";
+        d.style.animationDuration = 16 + Math.random() * 20 + "s";
+        root.appendChild(d);
+      }
+    })();
+    (function () {
+      var btn = document.getElementById("navToggle");
+      var panel = document.getElementById("navMobile");
+      if (!btn || !panel) return;
+      btn.addEventListener("click", function () {
+        var open = panel.classList.toggle("is-open");
+        panel.setAttribute("aria-hidden", open ? "false" : "true");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      panel.querySelectorAll("a").forEach(function (a) {
+        a.addEventListener("click", function () {
+          panel.classList.remove("is-open");
+          panel.setAttribute("aria-hidden", "true");
+          btn.setAttribute("aria-expanded", "false");
+        });
+      });
+    })();
+    (function () {
+      var pills = document.querySelectorAll("#topics .topic-pill");
+      pills.forEach(function (el) {
+        var l = 0.82 + Math.random() * 0.45;
+        var r = 0.85 + Math.random() * 0.45;
+        if (Math.random() > 0.5) {
+          var t = l;
+          l = r;
+          r = t;
+        }
+        el.style.paddingLeft = l.toFixed(2) + "rem";
+        el.style.paddingRight = r.toFixed(2) + "rem";
+      });
+    })();
+  </script>
+</body>
+</html>
