@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BibleSense — Bible, but it actually makes sense</title>
+  <title>BibleSense: Read it. Get it. Apply it.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
   <style>
     :root {
+      /* App theme: Blue Azure - #9bd4e4 + #050a30 on white + navy sparkles */
       --navy: #050a30;
+      --navy-mid: #0c1838;
       --light-blue: #9bd4e4;
+      --light-blue-bright: #7ed0e4;
       --light-blue-soft: #dff5fb;
       --white: #ffffff;
-      --bg: #f5fbfd;
+      --bg: #ffffff;
       --text: #1a1f2e;
       --muted: #5c6478;
       --shadow: 0 24px 64px rgba(5, 10, 48, 0.08);
@@ -35,7 +38,11 @@
     body {
       font-family: "DM Sans", system-ui, -apple-system, sans-serif;
       color: var(--text);
-      background: var(--bg);
+      background:
+        radial-gradient(ellipse 100% 70% at 50% 0%, rgba(155, 212, 228, 0.35) 0%, transparent 52%),
+        radial-gradient(ellipse 70% 50% at 0% 100%, rgba(155, 212, 228, 0.14) 0%, transparent 48%),
+        radial-gradient(ellipse 60% 45% at 100% 65%, rgba(5, 10, 48, 0.04) 0%, transparent 40%),
+        var(--bg);
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
@@ -56,7 +63,7 @@
     .particle {
       position: absolute;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(155, 212, 228, 0.35), rgba(255, 255, 255, 0.2));
+      background: radial-gradient(circle, rgba(155, 212, 228, 0.35) 0%, rgba(155, 212, 228, 0.08) 60%, transparent 70%);
       animation: float 18s ease-in-out infinite;
     }
     @keyframes float {
@@ -67,26 +74,49 @@
       0%, 100% { transform: translate(0, 0); }
       50% { transform: translate(-8px, 12px); }
     }
-    @keyframes cta-glow-pulse {
-      0%, 100% { opacity: 0.85; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.04); }
+    @keyframes phone-float {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      25% { transform: translate3d(5px, -12px, 0) rotate(0.6deg); }
+      50% { transform: translate3d(0, -16px, 0) rotate(0deg); }
+      75% { transform: translate3d(-4px, -8px, 0) rotate(-0.5deg); }
     }
-    @keyframes cta-btn-breathe {
-      0%, 100% { box-shadow: 0 4px 24px rgba(5, 10, 48, 0.2), 0 0 0 0 rgba(155, 212, 228, 0.25); }
-      50% { box-shadow: 0 6px 32px rgba(5, 10, 48, 0.12), 0 0 28px 2px rgba(120, 200, 230, 0.35); }
+    @keyframes phone-float-back {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      30% { transform: translate3d(-5px, -10px, 0) rotate(-0.7deg); }
+      55% { transform: translate3d(4px, -14px, 0) rotate(0.4deg); }
+      80% { transform: translate3d(2px, -6px, 0) rotate(-0.3deg); }
     }
-    @keyframes phone-drift {
-      0%, 100% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(0, -11px, 0); }
+    @keyframes sparkle-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.06; }
+      50% { transform: translate(6px, -10px) scale(1.15); opacity: 0.22; }
+    }
+    @keyframes azure-chrome-flow {
+      0%, 100% { background-position: 12% 30%; }
+      50% { background-position: 88% 70%; }
+    }
+    @keyframes device-iphone-glow {
+      0%, 100% {
+        filter:
+          drop-shadow(0 24px 48px rgba(155, 212, 228, 0.42))
+          drop-shadow(0 10px 32px rgba(5, 10, 48, 0.16))
+          brightness(1.01);
+      }
+      50% {
+        filter:
+          drop-shadow(0 32px 56px rgba(155, 212, 228, 0.55))
+          drop-shadow(0 12px 36px rgba(5, 10, 48, 0.2))
+          brightness(1.045);
+      }
     }
     .sparkle {
       position: absolute;
-      width: 3px;
-      height: 3px;
-      background: var(--light-blue);
+      width: 2px;
+      height: 2px;
+      background: #050a30;
       border-radius: 50%;
-      opacity: 0.35;
-      animation: float-slow 10s ease-in-out infinite;
+      box-shadow: 0 0 0 0.5px rgba(5, 10, 48, 0.15);
+      opacity: 0.14;
+      animation: sparkle-drift 12s ease-in-out infinite;
     }
 
     .wrap {
@@ -114,20 +144,24 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(245, 251, 253, 0.82);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(155, 212, 228, 0.25);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(240, 250, 254, 0.88) 100%);
+      backdrop-filter: blur(20px) saturate(1.15);
+      -webkit-backdrop-filter: blur(20px) saturate(1.15);
+      border-bottom: 1px solid rgba(5, 10, 48, 0.07);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset, 0 4px 20px -6px rgba(5, 10, 48, 0.07);
     }
     .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      padding: 0.7rem 0 0.85rem;
+      gap: 0.85rem;
+      padding: 0.42rem 0 0.48rem;
     }
     @media (min-width: 1024px) {
-      .header-inner { padding: 0.85rem 0 1rem; }
+      .header-inner {
+        padding: 0.48rem 0 0.52rem;
+        gap: 1rem;
+      }
     }
     .logo-link {
       display: flex;
@@ -135,31 +169,82 @@
       gap: 0.5rem;
       min-width: 0;
     }
-    .logo-link img {
-      height: 56px;
-      width: auto;
-      max-width: min(280px, 65vw);
-      object-fit: contain;
-      object-position: left center;
-    }
-    @media (min-width: 640px) {
-      .logo-link img { height: 64px; max-width: 300px; }
+    /* Premium ring: lifts logo off pale backgrounds */
+    .logo-ring {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #c8ebf4 0%, var(--light-blue) 28%, var(--navy-mid) 58%, #4a8a9e 100%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.55) inset,
+        0 8px 28px -6px rgba(5, 10, 48, 0.22),
+        0 0 40px -12px rgba(94, 207, 255, 0.3);
     }
     @media (min-width: 1024px) {
-      .logo-link img { height: 72px; max-width: 320px; }
+      .logo-ring { padding: 4px; border-radius: 18px; }
+    }
+    .logo-link.logo-ring {
+      border-radius: 16px;
+    }
+    @media (min-width: 1024px) {
+      .logo-link.logo-ring { border-radius: 18px; }
+    }
+    .logo-link img,
+    .logo-ring img {
+      display: block;
+      height: 56px;
+      width: auto;
+      max-width: min(280px, 62vw);
+      object-fit: contain;
+      object-position: left center;
+      padding: 0.32rem 0.72rem;
+      background: linear-gradient(180deg, #ffffff 0%, #f6fbff 100%);
+      border-radius: 12px;
+      border: 1px solid rgba(5, 10, 48, 0.12);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 1) inset;
+      filter: drop-shadow(0 1px 3px rgba(5, 10, 48, 0.05));
+    }
+    @media (min-width: 640px) {
+      .logo-link img, .logo-ring img { height: 68px; max-width: 300px; padding: 0.38rem 0.85rem; border-radius: 13px; }
+    }
+    @media (min-width: 1024px) {
+      .logo-link img, .logo-ring img { height: 78px; max-width: 340px; padding: 0.4rem 0.9rem; border-radius: 14px; }
+    }
+    .logo-ring--footer {
+      margin-bottom: 0.15rem;
+      padding: 3px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(155, 212, 228, 0.85) 0%, var(--navy-mid) 50%, rgba(74, 122, 138, 0.95) 100%);
+      box-shadow:
+        0 0 0 1px rgba(155, 212, 228, 0.25),
+        0 8px 32px -4px rgba(0, 0, 0, 0.45),
+        0 0 40px -8px rgba(155, 212, 228, 0.25);
+    }
+    .logo-ring--footer img {
+      height: 56px;
+      max-width: 280px;
+      border-radius: 12px;
+      border: 1px solid rgba(5, 10, 48, 0.08);
+    }
+    @media (min-width: 640px) {
+      .logo-ring--footer img { height: 68px; max-width: 300px; }
     }
     .nav-desktop {
       display: none;
       align-items: center;
-      gap: 2rem;
+      gap: 1.35rem;
     }
     @media (min-width: 1024px) {
       .nav-desktop { display: flex; }
     }
+    @media (min-width: 1200px) {
+      .nav-desktop { gap: 1.5rem; }
+    }
     .nav-desktop a {
-      font-size: 0.9rem;
+      font-size: 0.875rem;
       font-weight: 500;
       color: var(--muted);
+      line-height: 1.2;
       transition: color 0.2s, transform 0.2s;
     }
     .nav-desktop a:hover {
@@ -170,6 +255,12 @@
     }
     @media (min-width: 1024px) {
       .header-cta { display: inline-flex; }
+    }
+    .header .header-cta.btn-pill {
+      padding: 0.5rem 1.15rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      line-height: 1.2;
     }
     .btn-pill {
       display: inline-flex;
@@ -189,8 +280,16 @@
       box-shadow: 0 8px 24px rgba(155, 212, 228, 0.45);
     }
     .btn-pill--primary {
-      background: var(--light-blue);
-      color: var(--navy);
+      background: linear-gradient(180deg, #0c1848 0%, #050a30 48%, #020510 100%);
+      color: #f2f8fc;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 18px rgba(5, 10, 48, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .btn-pill--primary:hover {
+      background: linear-gradient(180deg, #132058 0%, #060d28 48%, #030510 100%);
+      box-shadow: 0 8px 28px rgba(5, 10, 48, 0.4), 0 0 0 1px rgba(155, 212, 228, 0.18) inset;
+      border-color: rgba(155, 212, 228, 0.35);
     }
     .btn-pill--ghost {
       background: var(--white);
@@ -211,8 +310,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border: none;
       background: var(--white);
       border-radius: 12px;
@@ -246,10 +345,23 @@
     .hero {
       padding: 3.75rem 0 4.5rem;
       position: relative;
+      overflow: hidden;
     }
     @media (min-width: 1024px) {
-      .hero { padding: 5rem 0 5.5rem; }
+      .hero { padding: 5.25rem 0 5.75rem; }
     }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -20%;
+      left: -15%;
+      width: min(90vw, 520px);
+      height: min(90vw, 520px);
+      background: radial-gradient(circle, rgba(155, 212, 228, 0.28) 0%, transparent 62%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero .container { position: relative; z-index: 1; }
     .hero-grid {
       display: grid;
       gap: 2.5rem;
@@ -268,28 +380,28 @@
     .hero .badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 1rem;
+      gap: 0.45rem;
+      padding: 0.5rem 1.05rem;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid rgba(155, 212, 228, 0.55);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 252, 245, 0.88) 100%);
+      border: 1px solid rgba(155, 212, 228, 0.75);
       font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      color: var(--navy);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--navy-mid);
       margin-bottom: 1.75rem;
-      box-shadow: 0 4px 24px rgba(155, 212, 228, 0.12);
+      box-shadow: 0 4px 24px rgba(5, 10, 48, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
     .hero h1 {
-      font-size: clamp(2.5rem, 5.2vw, 3.75rem);
-      line-height: 1.04;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
+      font-size: clamp(2.35rem, 5.4vw, 3.55rem);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0;
       max-width: 14em;
-      background: linear-gradient(165deg, #0c1838 0%, #080f28 40%, #020617 100%);
+      background: linear-gradient(120deg, #050a30 0%, #0c2840 38%, #153d52 58%, var(--light-blue) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -298,24 +410,49 @@
     @supports not (background-clip: text) {
       .hero h1 { -webkit-text-fill-color: var(--navy); color: var(--navy); }
     }
-    .hero .lead {
-      font-size: 1.08rem;
-      line-height: 1.75;
+    .hero .hero-subhead {
+      margin: 0.85rem 0 0;
+      font-size: clamp(1.05rem, 2.1vw, 1.28rem);
+      line-height: 1.45;
+      font-weight: 600;
       color: var(--muted);
-      max-width: 33rem;
-      margin-bottom: 2rem;
+      letter-spacing: -0.01em;
+      max-width: 22rem;
+    }
+    .hero .hero-intro {
+      margin: 1.45rem 0 0;
+      font-size: 0.98rem;
+      line-height: 1.65;
+      font-weight: 500;
+      font-style: italic;
+      color: #3d485c;
+      max-width: 37.5rem;
     }
     .hero-btns {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.85rem 1rem;
-      margin-bottom: 2.25rem;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      margin-top: 1.85rem;
+      margin-bottom: 1.35rem;
+    }
+    .hero .hero-cta-note {
+      margin: 0.65rem 0 0;
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.45;
+      color: rgba(5, 10, 48, 0.52);
+      text-align: center;
+      letter-spacing: 0.02em;
     }
     .hero .hero-btns .btn-pill {
       box-shadow: 0 6px 20px rgba(5, 10, 48, 0.1);
     }
     .hero .hero-btns .btn-pill--primary {
-      box-shadow: 0 8px 28px rgba(91, 170, 195, 0.35), 0 2px 8px rgba(5, 10, 48, 0.08);
+      box-shadow: 0 8px 26px rgba(5, 10, 48, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      min-width: 12.5rem;
     }
     .hero .hero-btns .btn-pill--ghost {
       box-shadow: 0 6px 20px rgba(5, 10, 48, 0.07);
@@ -331,47 +468,16 @@
     .btn-large.btn-pill--primary {
       min-width: 9rem;
     }
-    .hero .highlights {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.65rem 0.9rem;
-      padding: 1.1rem 1.15rem;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.4);
-      border: 1px solid rgba(155, 212, 228, 0.45);
-      box-shadow: 0 4px 32px rgba(155, 212, 228, 0.12);
-      backdrop-filter: blur(14px) saturate(1.1);
-      -webkit-backdrop-filter: blur(14px) saturate(1.1);
-    }
-    @media (min-width: 480px) {
-      .hero .highlights { gap: 0.7rem 1.1rem; }
-    }
-    .hero .highlight {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #4a5064;
-    }
-    .hero .highlight .hi-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 2px 12px rgba(5, 10, 48, 0.05);
-      flex-shrink: 0;
-      color: var(--navy);
-    }
     @media (prefers-reduced-motion: reduce) {
       .phone-drift { animation: none !important; }
+      .device-iphone--hero { animation: none !important; }
+      .device-iphone__chassis { animation: none !important; }
+      .device-ipad__chassis { animation: none !important; }
+      .sparkle { animation: none !important; opacity: 0.1; }
+      .particle { animation: none !important; }
     }
 
-    /* Phone mockup stack — iPhone Pro–style: titanium chrome + island */
+    /* Phone mockup stack - iPhone Pro-style: titanium chrome + island */
     .hero-phones {
       position: relative;
       min-height: 420px;
@@ -391,9 +497,9 @@
       width: min(105vw, 560px);
       height: 480px;
       background: radial-gradient(ellipse 50% 48% at 50% 48%,
-        rgba(120, 210, 240, 0.38) 0%,
-        rgba(180, 230, 250, 0.22) 40%,
-        rgba(250, 252, 255, 0.1) 62%,
+        rgba(155, 212, 228, 0.42) 0%,
+        rgba(200, 235, 245, 0.22) 38%,
+        rgba(255, 255, 255, 0.35) 55%,
         transparent 75%);
       z-index: 0;
       pointer-events: none;
@@ -407,12 +513,12 @@
       height: 480px;
       max-width: 95vw;
       background: radial-gradient(circle,
-        rgba(155, 220, 245, 0.55) 0%,
-        rgba(200, 235, 250, 0.32) 32%,
-        rgba(255, 255, 255, 0.18) 50%,
+        rgba(155, 212, 228, 0.45) 0%,
+        rgba(180, 230, 242, 0.28) 30%,
+        rgba(255, 255, 255, 0.35) 48%,
         transparent 70%);
       border-radius: 50%;
-      filter: blur(16px);
+      filter: blur(18px);
       z-index: 0;
     }
     .phone-glow::after {
@@ -424,48 +530,64 @@
       width: 120%;
       height: 120%;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 55%);
-      opacity: 0.5;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 55%);
+      opacity: 0.55;
       pointer-events: none;
     }
     .phone-drift {
       will-change: transform;
-      animation: phone-drift 8.5s ease-in-out infinite;
+      animation: phone-float 7s ease-in-out infinite;
+    }
+    .phone--back .phone-drift {
+      animation-name: phone-float-back;
+      animation-duration: 8.2s;
+      animation-delay: 0.15s;
     }
     .phone--front .phone-drift {
-      animation-duration: 7.2s;
-      animation-delay: 0.5s;
+      animation-duration: 6.4s;
+      animation-delay: 0.4s;
     }
     .device-iphone {
       position: relative;
       z-index: 1;
       width: 100%;
-      filter:
-        drop-shadow(0 22px 44px rgba(155, 212, 228, 0.32))
-        drop-shadow(0 10px 28px rgba(5, 10, 48, 0.12));
     }
-    /* Starlight / silver — latest iPhone–style shell, not black */
+    .device-iphone--hero {
+      animation: device-iphone-glow 4.2s ease-in-out infinite;
+    }
+    /* Shiny "chrome" - Blue Azure-tinted metal + slow specular shift */
     .device-iphone__chassis {
+      position: relative;
       border-radius: 2.55rem;
       padding: 2px;
-      background: linear-gradient(165deg,
-        #ffffff 0%,
-        #e8e8ed 14%,
-        #f7f7f9 32%,
-        #d2d2d8 52%,
-        #fafbfd 72%,
-        #c6c6cc 100%);
+      background: linear-gradient(155deg,
+        #feffff 0%,
+        #d8ebf1 6%,
+        #eef8fb 18%,
+        #b0d4e0 32%,
+        #f2f8fb 45%,
+        #9bd4e4 58%,
+        #dceef4 72%,
+        #e8f3f6 86%,
+        #c0dde8 100%);
+      background-size: 280% 280%;
+      animation: azure-chrome-flow 10s ease-in-out infinite;
       box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.98) inset,
-        0 2px 4px rgba(0, 0, 0, 0.05) inset,
-        0 1px 0 rgba(255, 255, 255, 0.85) inset,
-        0 28px 56px -14px rgba(5, 10, 48, 0.16);
+        0 0 0 1px rgba(255, 255, 255, 0.95) inset,
+        0 0 0 1.5px rgba(5, 10, 48, 0.1),
+        0 3px 8px rgba(0, 0, 0, 0.06) inset,
+        0 2px 0 rgba(255, 255, 255, 0.9) inset,
+        0 3px 2px rgba(5, 10, 48, 0.04) inset,
+        0 32px 64px -12px rgba(5, 10, 48, 0.2),
+        0 0 40px -8px rgba(155, 212, 228, 0.45);
     }
     .device-iphone__bezel {
       border-radius: 2.38rem;
       padding: 1px;
-      background: linear-gradient(180deg, #2a2a2c 0%, #0e0e0f 100%);
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+      background: linear-gradient(160deg, #1a1d22 0%, #0a0b0c 40%, #050a12 100%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+        0 1px 0 rgba(0, 0, 0, 0.5) inset;
     }
     .device-iphone__screen {
       border-radius: 2.2rem;
@@ -482,10 +604,13 @@
       width: 34%;
       max-width: 120px;
       height: 28px;
-      background: linear-gradient(180deg, #232325 0%, #101012 100%);
+      background: linear-gradient(180deg, #1e2126 0%, #0c0d10 100%);
       border-radius: 20px;
       z-index: 4;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(100, 100, 110, 0.2) inset;
+      box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(5, 10, 48, 0.35) inset,
+        0 1px 0 rgba(255, 255, 255, 0.12) inset;
     }
     .device-iphone__image {
       position: absolute;
@@ -502,10 +627,10 @@
       position: absolute;
       z-index: 6;
       width: 2px;
-      background: linear-gradient(180deg, #e2e2e7, #b8b8c0);
-      box-shadow: 0.5px 0 0 rgba(255, 255, 255, 0.45) inset, -0.5px 0 0.5px rgba(0, 0, 0, 0.12);
+      background: linear-gradient(180deg, #f0f4f6, #c8ccd4);
+      box-shadow: 0.5px 0 0 rgba(255, 255, 255, 0.55) inset, -0.5px 0 0.5px rgba(0, 0, 0, 0.2);
       border-radius: 1px 0 0 1px;
-      opacity: 0.92;
+      opacity: 0.95;
     }
     .device-iphone--hero .device-iphone__btn--mute {
       left: -2px;
@@ -528,8 +653,8 @@
       top: 25%;
       height: 58px;
       border-radius: 0 1px 1px 0;
-      background: linear-gradient(180deg, #dcdce1, #b0b0b8);
-      box-shadow: -0.5px 0 0 rgba(255, 255, 255, 0.35) inset, 0.5px 0 0.5px rgba(0, 0, 0, 0.12);
+      background: linear-gradient(180deg, #e8ecef, #a8b0b8);
+      box-shadow: -0.5px 0 0 rgba(255, 255, 255, 0.45) inset, 0.5px 0 0.5px rgba(0, 0, 0, 0.15);
     }
     .phone {
       position: relative;
@@ -561,12 +686,14 @@
       }
       .phone--back { right: 4%; }
     }
-    .phone--back:hover .device-iphone,
-    .phone--front:hover .device-iphone {
+    .phone--back:hover .device-iphone--hero,
+    .phone--front:hover .device-iphone--hero {
+      animation-play-state: paused;
       transform: scale(1.02);
       filter:
-        drop-shadow(0 28px 50px rgba(155, 212, 228, 0.38))
-        drop-shadow(0 12px 32px rgba(5, 10, 48, 0.15));
+        drop-shadow(0 32px 56px rgba(155, 212, 228, 0.55))
+        drop-shadow(0 12px 36px rgba(5, 10, 48, 0.2))
+        brightness(1.04);
     }
     .hero-badge {
       position: absolute;
@@ -595,13 +722,13 @@
 
     /* ---- Section common ---- */
     .section {
-      padding: 5rem 0;
+      padding: 5.5rem 0;
     }
     @media (min-width: 768px) {
-      .section { padding: 6.25rem 0; }
+      .section { padding: 6.5rem 0; }
     }
     @media (min-width: 1200px) {
-      .section { padding: 6.75rem 0; }
+      .section { padding: 7rem 0; }
     }
     .section-label {
       font-size: 0.7rem;
@@ -623,15 +750,93 @@
       max-width: 36rem;
     }
 
+    /* ---- Timeless truth strip ---- */
+    .truth-strip {
+      position: relative;
+      padding: clamp(2.5rem, 5vw, 3.75rem) 0;
+      overflow: hidden;
+    }
+    .truth-strip::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #050a30 0%, #0c1838 45%, #102a3d 100%);
+      z-index: 0;
+    }
+    .truth-strip::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 85% 70% at 15% 25%, rgba(155, 212, 228, 0.2) 0%, transparent 52%),
+        radial-gradient(ellipse 55% 50% at 95% 75%, rgba(94, 207, 255, 0.12) 0%, transparent 48%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .truth-strip .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 40rem;
+      margin: 0 auto;
+    }
+    .truth-strip__eyebrow {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #b8e8f4;
+      margin-bottom: 0.8rem;
+    }
+    .truth-strip h2 {
+      font-size: clamp(1.5rem, 3.2vw, 2.15rem);
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    }
+    .truth-strip p {
+      font-size: 1.04rem;
+      line-height: 1.7;
+      color: rgba(228, 236, 255, 0.9);
+    }
+    .truth-strip .core-message__emphasis {
+      margin-top: 1.35rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-style: italic;
+      line-height: 1.55;
+      color: rgba(210, 235, 255, 0.95);
+    }
+
     /* ---- Features grid ---- */
     .features {
-      background: linear-gradient(180deg, var(--bg) 0%, var(--white) 40%, var(--bg) 100%);
+      position: relative;
+      background: linear-gradient(180deg, #fbfdfe 0%, #f5f9fb 40%, #ffffff 100%);
+      overflow: hidden;
+    }
+    .features::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(5, 10, 48, 0.06) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      background-position: 0 0, 11px 11px;
+    }
+    .features > .container {
+      position: relative;
+      z-index: 1;
     }
     .feature-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1.5rem;
       margin-top: 2.5rem;
+      align-items: stretch;
     }
     @media (min-width: 640px) {
       .feature-grid {
@@ -649,225 +854,247 @@
       .feature-grid { gap: 2rem 1.75rem; }
     }
     .feature-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
       background: var(--white);
       border-radius: var(--radius-lg);
-      padding: 1.6rem 1.4rem;
-      box-shadow: 0 12px 40px -8px rgba(5, 10, 48, 0.07);
-      border: 1px solid rgba(155, 212, 228, 0.35);
-      transition: transform 0.3s ease, box-shadow 0.35s ease, border-color 0.3s ease;
+      padding: 1.5rem 1.35rem 1.5rem;
+      box-shadow: 0 10px 25px rgba(5, 10, 48, 0.06);
+      border: 1px solid rgba(5, 10, 48, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.32s ease, border-color 0.3s ease;
       position: relative;
+      cursor: pointer;
     }
     .feature-card::after {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      opacity: 0;
-      pointer-events: none;
-      background: radial-gradient(120% 80% at 50% 0%, rgba(155, 212, 228, 0.22) 0%, transparent 55%);
-      transition: opacity 0.35s ease;
+      display: none;
     }
     .feature-card:hover {
-      transform: translateY(-6px);
-      box-shadow:
-        0 28px 56px -16px rgba(5, 10, 48, 0.14),
-        0 12px 24px -8px rgba(5, 10, 48, 0.08),
-        0 0 48px -4px rgba(120, 200, 230, 0.35);
-      border-color: rgba(155, 212, 228, 0.65);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px rgba(5, 10, 48, 0.1);
+      border-color: rgba(5, 10, 48, 0.12);
     }
-    .feature-card:hover::after {
-      opacity: 1;
+    .feature-card .feature-bullets {
+      flex: 1 1 auto;
     }
     .feature-icon {
       position: relative;
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1.05rem;
-      font-size: 1.65rem;
-      line-height: 1;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(5, 10, 48, 0.04),
-        0 4px 14px rgba(5, 10, 48, 0.06);
-      overflow: hidden;
-      transition: box-shadow 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+      margin-bottom: 0.95rem;
+      flex-shrink: 0;
+      background: linear-gradient(145deg, rgba(155, 212, 228, 0.32) 0%, rgba(155, 212, 228, 0.14) 45%, rgba(5, 10, 48, 0.07) 100%);
+      border: 1px solid rgba(155, 212, 228, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+    .feature-icon svg {
+      display: block;
+      color: #050a30;
     }
     .feature-card:hover .feature-icon {
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      border-color: rgba(155, 212, 228, 0.5);
+    }
+    .feature-card--more {
+      cursor: default;
+      background: linear-gradient(180deg, rgba(155, 212, 228, 0.12) 0%, rgba(155, 212, 228, 0.04) 100%);
+      border: 1px solid rgba(155, 212, 228, 0.6);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.6),
-        inset 0 -1px 0 rgba(5, 10, 48, 0.05),
-        0 0 0 1px rgba(155, 212, 228, 0.35) inset,
-        0 8px 28px rgba(100, 190, 220, 0.22);
-      transform: scale(1.04);
-      filter: saturate(1.05);
+        0 8px 30px rgba(155, 212, 228, 0.15),
+        0 10px 25px rgba(5, 10, 48, 0.05);
+    }
+    .feature-card--more:hover {
+      transform: translateY(-4px);
+      border-color: #9bd4e4;
+      box-shadow:
+        0 12px 38px rgba(155, 212, 228, 0.22),
+        0 16px 36px rgba(5, 10, 48, 0.08);
+    }
+    .feature-card--more .feature-icon--more {
+      background: linear-gradient(145deg, rgba(155, 212, 228, 0.48) 0%, rgba(155, 212, 228, 0.22) 50%, rgba(5, 10, 48, 0.06) 100%);
+      border: 1px solid rgba(155, 212, 228, 0.55);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        0 0 20px -4px rgba(155, 212, 228, 0.35);
+    }
+    .feature-card--more:hover .feature-icon--more {
+      border-color: rgba(155, 212, 228, 0.75);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 0 28px -2px rgba(155, 212, 228, 0.4);
+    }
+    .feature-card .feature-more__desc {
+      flex: 1 1 auto;
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      font-weight: 500;
+      color: rgba(5, 10, 48, 0.72);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .feature-card--more:hover {
+        transform: none;
+      }
     }
     .feature-card h3 {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 700;
       color: var(--navy);
+      margin-bottom: 0.55rem;
+      letter-spacing: -0.01em;
+    }
+    .feature-bullets {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .feature-bullets li,
+    .install-step-list li {
+      position: relative;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #4a5064;
+      padding-left: 0.85rem;
+      margin-bottom: 0.32rem;
+    }
+    .install-step-list li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .feature-bullets li:last-child,
+    .install-step-list li:last-child {
+      margin-bottom: 0;
+    }
+    .feature-bullets li::before,
+    .install-step-list li::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      top: 0.08em;
+      color: #050a30;
+      font-size: 0.68rem;
+      line-height: 1;
+    }
+    .feature-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .feature-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .feature-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      background: rgba(5, 10, 48, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .feature-modal { transition: none; }
+    }
+    .feature-modal__panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 26rem;
+      max-height: min(88vh, 36rem);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid rgba(155, 212, 228, 0.55);
+      box-shadow: 0 24px 60px rgba(5, 10, 48, 0.18);
+      padding: 1.5rem 1.4rem 1.45rem;
+    }
+    .feature-modal__close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 10px;
+      background: rgba(5, 10, 48, 0.06);
+      color: #050a30;
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .feature-modal__close:hover {
+      background: rgba(155, 212, 228, 0.35);
+    }
+    .feature-modal__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #050a30;
+      margin: 0 2.25rem 0.65rem 0;
+      line-height: 1.3;
+    }
+    .feature-modal__lede {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+    .feature-modal__bullets {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .feature-modal__bullets li {
+      position: relative;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: #3d4454;
+      padding-left: 0.9rem;
       margin-bottom: 0.4rem;
+    }
+    .feature-modal__bullets li:last-child {
+      margin-bottom: 0;
+    }
+    .feature-modal__bullets li::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      top: 0.12em;
+      color: #050a30;
+      font-size: 0.7rem;
+    }
+    body.feature-modal-open {
+      overflow: hidden;
     }
     .feature-card p {
       font-size: 0.86rem;
       line-height: 1.5;
       color: var(--muted);
     }
-    .mini-badge {
-      display: inline-block;
-      margin-top: 0.5rem;
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: #2d5a3d;
-      background: #e3f4e7;
-      padding: 0.2rem 0.45rem;
-      border-radius: 6px;
-    }
-
-    /* ---- Real Talk emotional band (between features & themes) ---- */
-    @keyframes emotive-drift {
+    @keyframes footer-star-drift {
       0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.35; }
       50% { transform: translate(10px, -14px) scale(1.05); opacity: 0.75; }
     }
-    .emotive-real-talk {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      padding: clamp(3.5rem, 8vw, 6rem) 0;
-      background: linear-gradient(168deg, #050a30 0%, #03061c 42%, #01030a 100%);
-      border-top: 1px solid rgba(155, 212, 228, 0.1);
-      border-bottom: 1px solid rgba(155, 212, 228, 0.08);
-    }
-    .emotive-real-talk::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse 90% 55% at 50% 20%, rgba(60, 100, 140, 0.12) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 50% at 80% 85%, rgba(155, 212, 228, 0.06) 0%, transparent 45%);
-    }
-    .emotive-real-talk::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(ellipse 75% 65% at 50% 50%, transparent 35%, rgba(0, 0, 0, 0.45) 100%);
-      opacity: 0.65;
-    }
-    .emotive-real-talk__particles {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .emotive-particle {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(155, 212, 228, 0.25) 0%, rgba(155, 212, 228, 0) 70%);
-      animation: emotive-drift 20s ease-in-out infinite;
-    }
-    .emotive-sparkle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      border-radius: 50%;
-      background: rgba(220, 245, 255, 0.45);
-      box-shadow: 0 0 6px rgba(155, 212, 228, 0.4);
-      animation: emotive-drift 14s ease-in-out infinite;
-    }
-    .emotive-real-talk .container {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      max-width: 42rem;
-    }
-    .emotive-real-talk h2 {
-      font-size: clamp(1.9rem, 4.2vw, 2.85rem);
-      font-weight: 600;
-      line-height: 1.15;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.1rem;
-      text-shadow: 0 2px 28px rgba(155, 212, 228, 0.12);
-    }
-    .emotive-real-talk .emotive-lead {
-      font-size: 1.08rem;
-      line-height: 1.65;
-      color: rgba(232, 238, 255, 0.78);
-      margin-bottom: 2.25rem;
-      max-width: 36rem;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .real-talk-mock {
-      max-width: 32rem;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 1rem 1.2rem 1rem 1rem;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.055);
-      border: 1px solid rgba(155, 212, 228, 0.22);
-      box-shadow:
-        0 12px 48px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .real-talk-mock:focus-within {
-      border-color: rgba(155, 212, 228, 0.4);
-      box-shadow:
-        0 12px 48px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(155, 212, 228, 0.12),
-        0 0 40px -8px rgba(100, 180, 210, 0.2);
-    }
-    .real-talk-mock__icon {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(145deg, rgba(155, 212, 228, 0.2), rgba(80, 120, 160, 0.15));
-      color: rgba(200, 235, 250, 0.95);
-    }
-    .real-talk-mock input {
-      flex: 1;
-      min-width: 0;
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.92);
-      font-size: 0.98rem;
-      font-family: inherit;
-      outline: none;
-      cursor: default;
-    }
-    .real-talk-mock input::placeholder {
-      color: rgba(200, 215, 235, 0.55);
-      font-style: italic;
-    }
-    .emotive-real-talk__note {
-      margin-top: 1.15rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.04em;
-      color: rgba(180, 200, 225, 0.45);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .emotive-particle,
-      .emotive-sparkle { animation: none !important; opacity: 0.5; }
-    }
 
-    /* ---- Themes (dark) — showcase strip ---- */
+    /* ---- Themes (dark) - showcase strip ---- */
     .themes-block {
       position: relative;
       overflow: hidden;
@@ -1027,6 +1254,7 @@
     .device-iphone--compact .device-iphone__chassis {
       border-radius: 1.35rem;
       padding: 1.5px;
+      animation-duration: 16s;
     }
     .device-iphone--compact .device-iphone__bezel {
       border-radius: 1.2rem;
@@ -1066,52 +1294,275 @@
       letter-spacing: 0.06em;
     }
 
-    /* ---- Topics ---- */
-    .topic-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem 0.9rem;
-      margin-top: 2.25rem;
-      justify-content: center;
-    }
-    @media (min-width: 480px) {
-      .topic-cloud { gap: 0.8rem 1rem; }
+    /* ---- Topics (life topics moment) ---- */
+    .section.topics-section {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      padding: 4.25rem 0 2.75rem;
     }
     @media (min-width: 768px) {
-      .topic-cloud {
-        justify-content: flex-start;
-        gap: 0.85rem 1.1rem;
-      }
+      .section.topics-section { padding: 4.5rem 0 2.9rem; }
+    }
+    @media (min-width: 1200px) {
+      .section.topics-section { padding: 4.75rem 0 3rem; }
+    }
+    .topics-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(5, 10, 48, 0.05) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      background-position: 0 0, 11px 11px;
+    }
+    .topics-section .container {
+      position: relative;
+      z-index: 1;
+    }
+    .topics-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .topics-section__head {
+      text-align: center;
+      max-width: 38rem;
+      margin: 0 auto 1.25rem;
+    }
+    .topics-section .section-title {
+      margin: 0 auto;
+    }
+    .topics-section__sub {
+      margin: 0.5rem 0 0 0;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+    .topics-panel {
+      position: relative;
+      z-index: 0;
+      width: 100%;
+      margin-top: 0.9rem;
+      padding: clamp(1.1rem, 2.2vw, 1.5rem) clamp(1rem, 2.5vw, 1.65rem) clamp(1.1rem, 2.1vw, 1.4rem);
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid rgba(155, 212, 228, 0.45);
+      box-shadow: 0 4px 28px rgba(5, 10, 48, 0.06);
+      overflow: hidden;
+    }
+    .topics-panel::before {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+      left: 50%;
+      top: 42%;
+      width: 120%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse 70% 75% at 50% 45%, rgba(155, 212, 228, 0.28) 0%, rgba(255, 255, 255, 0) 65%);
+    }
+    .topic-cloud {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 0.88rem;
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+    }
+    @media (min-width: 600px) {
+      .topic-cloud { gap: 0.8rem 0.9rem; }
+    }
+    @media (min-width: 900px) {
+      .topic-cloud { gap: 0.85rem 0.9rem; }
     }
     .topic-pill {
-      display: inline-block;
-      padding: 0.6rem 1.1rem;
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.5rem 0.9rem 0.5rem 0.7rem;
       border-radius: 9999px;
-      font-size: 0.86rem;
-      font-weight: 500;
-      background: var(--white);
-      border: 1px solid rgba(155, 212, 228, 0.5);
-      color: var(--navy);
-      box-shadow: 0 2px 12px rgba(5, 10, 48, 0.05);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      background: #fff;
+      border: 1px solid rgba(155, 212, 228, 0.65);
+      color: #050a30;
+      box-shadow: 0 2px 10px rgba(5, 10, 48, 0.06);
       cursor: default;
       transition:
-        transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        background 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.28s ease,
+        background 0.28s ease,
+        border-color 0.28s ease,
+        box-shadow 0.28s ease;
+    }
+    .topic-pill::before {
+      content: "✦";
+      color: #050a30;
+      font-size: 0.6rem;
+      line-height: 1;
+      opacity: 0.9;
     }
     .topic-pill:hover {
-      transform: scale(1.05);
-      background: rgba(155, 212, 228, 0.22);
-      border-color: rgba(120, 200, 230, 0.75);
+      transform: translateY(-2px);
+      background: rgba(155, 212, 228, 0.2);
+      border-color: #9bd4e4;
       box-shadow:
-        0 0 0 1px rgba(155, 212, 228, 0.35) inset,
-        0 0 24px -4px rgba(120, 200, 235, 0.45),
-        0 6px 20px rgba(5, 10, 48, 0.08);
+        0 0 0 1px rgba(155, 212, 228, 0.25) inset,
+        0 6px 20px rgba(5, 10, 48, 0.08),
+        0 0 32px -6px rgba(155, 212, 228, 0.55);
     }
     @media (prefers-reduced-motion: reduce) {
       .topic-pill { transition: background 0.2s, border-color 0.2s, box-shadow 0.2s; }
       .topic-pill:hover { transform: none; }
+    }
+
+    /* iPad-style frame for topics showcase (wider than phone mockup) */
+    .device-ipad {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+    .device-ipad__chassis {
+      position: relative;
+      border-radius: 1.85rem;
+      padding: 2.5px;
+      background: linear-gradient(155deg,
+        #feffff 0%,
+        #d8ebf1 6%,
+        #eef8fb 18%,
+        #b0d4e0 32%,
+        #f2f8fb 45%,
+        #9bd4e4 58%,
+        #dceef4 72%,
+        #e8f3f6 86%,
+        #c0dde8 100%);
+      background-size: 280% 280%;
+      animation: azure-chrome-flow 10s ease-in-out infinite;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.95) inset,
+        0 0 0 1.5px rgba(5, 10, 48, 0.1),
+        0 3px 8px rgba(0, 0, 0, 0.06) inset,
+        0 2px 0 rgba(255, 255, 255, 0.9) inset,
+        0 28px 56px -14px rgba(5, 10, 48, 0.22),
+        0 0 48px -10px rgba(155, 212, 228, 0.42);
+    }
+    .device-ipad__bezel {
+      border-radius: 1.68rem;
+      padding: 10px;
+      background: linear-gradient(160deg, #1a1d22 0%, #0a0b0c 40%, #050a12 100%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+        0 1px 0 rgba(0, 0, 0, 0.5) inset;
+    }
+    .device-ipad__screen {
+      border-radius: 1.12rem;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+      aspect-ratio: 3 / 4;
+    }
+    .device-ipad__camera {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      z-index: 4;
+      background: radial-gradient(circle at 35% 30%, #3a3f48 0%, #121418 55%, #050608 100%);
+      box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(5, 10, 48, 0.4) inset,
+        0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    }
+    .device-ipad__image {
+      position: absolute;
+      inset: 0;
+    }
+    .device-ipad__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+
+    .topics-showcase {
+      position: relative;
+      margin-top: clamp(2.25rem, 5vw, 3.25rem);
+      padding: clamp(1.5rem, 4vw, 2.5rem) 0 clamp(0.25rem, 2vw, 0.75rem);
+    }
+    .topics-showcase__glow {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      transform: translate(-50%, -50%);
+      width: min(96vw, 980px);
+      height: min(70vw, 520px);
+      max-height: 560px;
+      background: radial-gradient(ellipse 54% 50% at 50% 50%,
+        rgba(155, 212, 228, 0.38) 0%,
+        rgba(200, 235, 245, 0.18) 42%,
+        rgba(255, 255, 255, 0.4) 62%,
+        transparent 72%);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(6px);
+    }
+    .topics-showcase__inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: min(520px, 100%);
+      margin: 0 auto;
+    }
+    .topics-showcase__lead {
+      margin: 0 auto clamp(1.15rem, 2.5vw, 1.5rem);
+      text-align: center;
+      text-wrap: balance;
+      max-width: 36rem;
+    }
+    .topics-showcase__device {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.95rem;
+      width: 100%;
+    }
+    .topics-showcase__mockup {
+      width: 100%;
+      max-width: min(440px, 92vw);
+      margin: 0 auto;
+      filter:
+        drop-shadow(0 24px 44px rgba(5, 10, 48, 0.2))
+        drop-shadow(0 0 32px rgba(155, 212, 228, 0.38));
+      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.45s ease;
+    }
+    .topics-showcase__device:hover .topics-showcase__mockup {
+      filter:
+        drop-shadow(0 30px 52px rgba(5, 10, 48, 0.24))
+        drop-shadow(0 0 44px rgba(155, 212, 228, 0.5));
+      transform: translateY(-4px) scale(1.01);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .topics-showcase__mockup,
+      .topics-showcase__device:hover .topics-showcase__mockup {
+        transition: none;
+        transform: none !important;
+      }
     }
 
     /* ---- Pricing ---- */
@@ -1124,9 +1575,12 @@
     }
     @media (min-width: 900px) {
       .pricing-row {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.14fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.14fr);
         gap: 1.35rem;
         align-items: stretch;
+        max-width: 920px;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
     @media (min-width: 1100px) {
@@ -1143,7 +1597,7 @@
       z-index: 1;
     }
     .price-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
       box-shadow: var(--shadow-hover);
     }
     .price-card--featured {
@@ -1159,7 +1613,7 @@
         0 32px 64px -12px rgba(5, 10, 48, 0.12);
     }
     .price-card--featured:hover {
-      transform: translateY(-4px);
+      transform: translateY(-6px);
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.95) inset,
         0 0 0 3px rgba(120, 200, 230, 0.28),
@@ -1209,6 +1663,13 @@
     .price-card--featured h3 {
       font-size: 1.45rem;
     }
+    .price-card__tagline {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin: -0.15rem 0 0.65rem;
+      line-height: 1.35;
+    }
     .price-amount {
       font-size: 1.6rem;
       font-weight: 700;
@@ -1242,179 +1703,271 @@
       margin-top: 2px;
       color: #2d7a4e;
     }
-    .price-card--upgrade {
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.35) 0%, transparent 45%),
-        linear-gradient(200deg, #e8f8fc 0%, var(--light-blue) 35%, #b8e4f0 70%, #e0f4fa 100%);
-      border: 1px solid rgba(155, 212, 228, 0.55);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.6),
-        0 8px 28px rgba(5, 10, 48, 0.07);
-    }
-    .price-card--upgrade .upgrade-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1rem;
-      color: var(--navy);
-      box-shadow: 0 4px 16px rgba(5, 10, 48, 0.08);
-    }
-    .price-card--upgrade p {
-      font-size: 1.05rem;
-      font-weight: 600;
-      line-height: 1.4;
-      color: var(--navy);
-    }
 
-    /* ---- Final CTA (emotional close) ---- */
-    .final-cta {
+    /* ---- FAQ (native details, no scripted motion) ---- */
+    .section.faq-section {
       position: relative;
       overflow: hidden;
-      border-radius: var(--radius-xl);
-      background: linear-gradient(155deg, #060d32 0%, #050a30 40%, #020510 100%);
-      padding: 2.75rem 1.5rem;
-      color: var(--white);
-      display: grid;
-      gap: 1.5rem;
-      align-items: center;
-      text-align: center;
-      box-shadow: 0 32px 80px rgba(5, 10, 48, 0.32);
+      padding-top: clamp(4rem, 8vw, 5.75rem);
+      padding-bottom: clamp(4.25rem, 9vw, 6.25rem);
     }
-    .final-cta::before {
+    .faq-section::before {
       content: "";
       position: absolute;
       inset: 0;
       z-index: 0;
-      border-radius: inherit;
       pointer-events: none;
-      background:
-        radial-gradient(ellipse 80% 55% at 15% 20%, rgba(100, 160, 210, 0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 90% 75%, rgba(130, 100, 180, 0.1) 0%, transparent 50%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 30%, rgba(0, 0, 0, 0.25) 100%);
+      background: linear-gradient(
+        180deg,
+        rgba(250, 252, 255, 0.98) 0%,
+        rgba(232, 246, 252, 0.88) 38%,
+        rgba(245, 250, 255, 0.95) 100%
+      );
     }
-    .final-cta::after {
+    .faq-section::after {
       content: "";
       position: absolute;
-      left: 50%;
-      top: 48%;
-      transform: translate(-50%, -50%);
-      width: min(100%, 52rem);
-      height: 120%;
+      inset: 0;
       z-index: 0;
       pointer-events: none;
-      background: radial-gradient(ellipse 58% 48% at 50% 45%, rgba(100, 190, 225, 0.18) 0%, rgba(80, 130, 180, 0.06) 45%, transparent 68%);
+      opacity: 0.5;
+      background-image: radial-gradient(circle, rgba(5, 10, 48, 0.065) 1px, transparent 1px);
+      background-size: 20px 20px;
     }
-    .final-cta__bloom {
-      position: absolute;
-      left: 50%;
-      top: 46%;
-      transform: translate(-50%, -50%);
-      width: min(92%, 40rem);
-      height: 10rem;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(200, 240, 255, 0.14) 0%, rgba(100, 190, 220, 0.06) 45%, transparent 70%);
-    }
-    .final-cta > *:not(.final-cta__bloom) {
+    .faq-section .container {
       position: relative;
       z-index: 1;
+      max-width: 800px;
     }
-    @media (min-width: 900px) {
-      .final-cta {
-        grid-template-columns: auto 1fr auto;
-        text-align: left;
-        padding: 3.25rem 2.75rem;
-        gap: 2.75rem;
-      }
+    .faq-head {
+      text-align: center;
+      margin-bottom: 2.35rem;
     }
-    .final-cta .cta-icon {
-      position: relative;
-      z-index: 1;
-      width: 92px;
-      height: 92px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 32% 28%, rgba(200, 235, 250, 0.45), rgba(30, 60, 100, 0.35) 55%, rgba(5, 10, 40, 0.95) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .faq-head .section-title {
+      margin-bottom: 0.7rem;
+    }
+    .faq-subtitle {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 34rem;
       margin: 0 auto;
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.12) inset,
-        0 0 0 1px rgba(155, 212, 228, 0.15),
-        0 0 40px 2px rgba(100, 190, 220, 0.35),
-        0 0 64px 8px rgba(60, 140, 180, 0.15),
-        0 16px 40px rgba(0, 0, 0, 0.35);
     }
-    .final-cta .cta-icon::after {
-      content: "";
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      background: transparent;
-      box-shadow: 0 0 32px 6px rgba(140, 210, 235, 0.25);
-      z-index: -1;
-      animation: cta-glow-pulse 4.5s ease-in-out infinite;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .final-cta .cta-icon::after { animation: none; }
-      .final-cta .btn-pill--primary { animation: none !important; }
-    }
-    .final-cta h2 {
-      font-size: clamp(1.75rem, 3.6vw, 2.45rem);
-      line-height: 1.16;
-      font-weight: 600;
-      color: var(--white);
-      text-shadow: 0 2px 40px rgba(0, 0, 0, 0.25), 0 0 60px rgba(100, 180, 210, 0.12);
-    }
-    .final-cta p {
-      margin-top: 0.65rem;
-      font-size: 1.15rem;
-      line-height: 1.55;
-      color: rgba(240, 245, 255, 0.82);
-      text-shadow: 0 1px 20px rgba(0, 0, 0, 0.2);
-    }
-    .final-cta .btn-pill--primary {
-      animation: cta-btn-breathe 4s ease-in-out infinite;
-    }
-    .final-cta .cta-side {
+    .faq-accordion {
       display: flex;
       flex-direction: column;
+      gap: 0.9rem;
+    }
+    .faq-item {
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid rgba(155, 212, 228, 0.48);
+      box-shadow: 0 8px 26px rgba(5, 10, 48, 0.06);
+      overflow: hidden;
+    }
+    .faq-item[open] {
+      border-color: rgba(155, 212, 228, 0.65);
+    }
+    .faq-item summary.faq-trigger {
+      list-style: none;
+      width: 100%;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.12rem 1.3rem;
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--navy);
+      background: transparent;
+      cursor: pointer;
     }
-    @media (min-width: 900px) {
-      .final-cta .cta-side { align-items: flex-end; }
+    .faq-item summary.faq-trigger::-webkit-details-marker {
+      display: none;
     }
-    .no-cc {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.55);
-      margin-top: 0.4rem;
+    .faq-item summary.faq-trigger:focus-visible {
+      outline: 2px solid var(--light-blue);
+      outline-offset: 3px;
+    }
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      color: rgba(5, 10, 48, 0.42);
+    }
+    .faq-item[open] .faq-chevron {
+      transform: rotate(180deg);
+      color: var(--navy);
+    }
+    .faq-panel {
+      border-top: 1px solid rgba(155, 212, 228, 0.28);
+    }
+    .faq-answer {
+      padding: 0.85rem 1.3rem 1.2rem;
+      font-size: 0.95rem;
+      line-height: 1.68;
+      color: var(--muted);
+    }
+    .faq-answer p + p {
+      margin-top: 0.7rem;
+    }
+    .faq-install-row {
+      margin-bottom: 0.45rem;
+    }
+    .faq-install-row:last-child {
+      margin-bottom: 0;
     }
 
-    /* ---- Install (PWA) — simple, calm ---- */
+    /* ---- Parent trust band ---- */
+    .section.parent-trust-section {
+      position: relative;
+      overflow: hidden;
+      padding-top: clamp(4.25rem, 9vw, 6rem);
+      padding-bottom: clamp(4.5rem, 9vw, 6.35rem);
+    }
+    .parent-trust-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(155deg, #050a30 0%, #081238 38%, #0c1c48 72%, #0a1638 100%);
+    }
+    .parent-trust-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 75% 60% at 18% 22%, rgba(155, 212, 228, 0.2) 0%, transparent 58%),
+        radial-gradient(ellipse 55% 50% at 88% 78%, rgba(90, 160, 210, 0.14) 0%, transparent 52%);
+    }
+    .parent-trust-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .parent-trust-section h2 {
+      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+      font-size: clamp(1.78rem, 3.6vw, 2.28rem);
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.15rem;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 28px rgba(0, 0, 0, 0.28);
+    }
+    .parent-trust-lede {
+      font-size: 1.05rem;
+      line-height: 1.72;
+      color: rgba(228, 238, 255, 0.92);
+      margin-bottom: 1.85rem;
+    }
+    .parent-trust-list {
+      list-style: none;
+      margin: 0 auto 2.1rem;
+      max-width: 34rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      text-align: left;
+    }
+    .parent-trust-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.96rem;
+      line-height: 1.58;
+      color: rgba(218, 232, 250, 0.94);
+    }
+    .parent-trust-list .trust-star {
+      flex-shrink: 0;
+      margin-top: 0.2em;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      color: rgba(155, 212, 228, 0.95);
+    }
+    /* ---- Final CTA (calm close) ---- */
+    #cta.section {
+      position: relative;
+      padding-top: clamp(3.75rem, 9vw, 5.75rem);
+      padding-bottom: clamp(4.75rem, 11vw, 8rem);
+      background: linear-gradient(180deg, #ffffff 0%, rgba(245, 250, 253, 0.85) 45%, #ffffff 100%);
+    }
+    #cta .container {
+      position: relative;
+      z-index: 1;
+    }
+    .final-cta {
+      max-width: 43rem;
+      margin: 0 auto;
+      padding: 0 0.25rem;
+      text-align: center;
+    }
+    .final-cta__title {
+      font-size: clamp(1.85rem, 3.6vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1.22;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      margin: 0;
+    }
+    .final-cta__lede {
+      margin: 1.35rem auto 0;
+      max-width: 40rem;
+      font-size: clamp(1rem, 2vw, 1.12rem);
+      line-height: 1.65;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    /* ---- Install (progressive web app) - detailed, first-timer friendly ---- */
     .install-section {
-      background: linear-gradient(180deg, var(--bg) 0%, var(--white) 45%, var(--bg) 100%);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--white) 50%, var(--bg) 100%);
+    }
+    .install-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(5, 10, 48, 0.05) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      background-position: 0 0, 11px 11px;
+    }
+    .install-section > .container {
+      position: relative;
+      z-index: 1;
     }
     .install-section .section-head {
       text-align: center;
-      max-width: 32rem;
+      max-width: 40rem;
       margin: 0 auto 1.5rem;
     }
-    .install-no-store {
+    .install-section .section-desc {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .install-helper {
+      margin: 0.6rem 0 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .install-webapp-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      margin-top: 0.75rem;
-      padding: 0.4rem 0.9rem;
+      margin-top: 0.9rem;
+      padding: 0.45rem 1rem;
       font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #2d4a5c;
       background: rgba(155, 212, 228, 0.28);
@@ -1424,8 +1977,8 @@
     .install-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.25rem;
-      margin-top: 2rem;
+      gap: 1.5rem;
+      margin-top: 2.25rem;
     }
     @media (min-width: 900px) {
       .install-grid {
@@ -1435,82 +1988,215 @@
       }
     }
     .install-card {
+      display: flex;
+      flex-direction: column;
       background: var(--white);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(155, 212, 228, 0.4);
-      padding: 1.5rem 1.35rem 1.4rem;
-      box-shadow: 0 8px 32px rgba(5, 10, 48, 0.06);
+      border-radius: 18px;
+      border: 1px solid rgba(5, 10, 48, 0.08);
+      padding: 0 0 1.6rem 0;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(5, 10, 48, 0.08);
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
     .install-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px -8px rgba(5, 10, 48, 0.1), 0 0 40px -10px rgba(100, 190, 220, 0.2);
-      border-color: rgba(155, 212, 228, 0.65);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(5, 10, 48, 0.1), 0 0 40px -8px rgba(155, 212, 228, 0.45);
+      border-color: rgba(155, 212, 228, 0.4);
     }
     @media (prefers-reduced-motion: reduce) {
       .install-card:hover { transform: none; }
     }
-    .install-card__top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.75rem;
-      margin-bottom: 0.9rem;
+    .install-card__browser {
+      width: 100%;
+      background: linear-gradient(180deg, #f0f6fa 0%, #e8f0f5 100%);
+      border-bottom: 1px solid rgba(5, 10, 48, 0.06);
     }
-    .install-card__icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+    .install-card__browser-chrome {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0.9rem 0.5rem;
+    }
+    .install-card__browser-dots {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .install-card__browser-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(5, 10, 48, 0.18);
+      border: 1px solid rgba(5, 10, 48, 0.1);
+    }
+    .install-card__browser-dots span:nth-child(1) { background: rgba(5, 10, 48, 0.2); }
+    .install-card__browser-dots span:nth-child(2) { background: rgba(5, 10, 48, 0.14); }
+    .install-card__browser-dots span:nth-child(3) { background: rgba(5, 10, 48, 0.1); }
+    .install-card__browser-url {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: rgba(5, 10, 48, 0.45);
+      text-align: center;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(5, 10, 48, 0.08);
+      padding: 0.28rem 0.4rem;
+      letter-spacing: 0.02em;
+    }
+    .install-card__browser-preview {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(145deg, #e8f6fb, #c8e8f2);
-      color: #1a4a5c;
+      padding: 0.7rem 0.5rem 0.85rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(155, 212, 228, 0.08) 100%);
     }
-    .install-card__micro {
+    .install-card__device-icon {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
-      color: #7a8a9a;
-      flex-shrink: 0;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(155, 212, 228, 0.25), rgba(5, 10, 48, 0.08));
+      color: #050a30;
     }
-    .install-card__micro svg {
-      display: block;
-      opacity: 0.7;
+    .install-card__body {
+      padding: 1.1rem 1.5rem 0;
     }
-    .install-card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 0.85rem;
+    .install-card .install-step-list li {
+      margin-bottom: 0.5rem;
     }
-    .install-steps {
-      margin: 0;
-      padding: 0 0 0 1.1rem;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.55;
-    }
-    .install-steps li {
-      margin-bottom: 0.45rem;
-    }
-    .install-steps li:last-child {
+    .install-card .install-step-list li:last-child {
       margin-bottom: 0;
     }
-    @media (min-width: 900px) {
-      .install-section .section-head { margin-bottom: 0.5rem; }
+    .install-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0.1rem 0 0.35rem 0;
     }
-
-    /* ---- Site footer ---- */
-    .site-footer {
-      margin-top: 0;
-      background: linear-gradient(180deg, #eef6fa 0%, var(--bg) 50%, #e8f4f8 100%);
-      border-top: 1px solid rgba(155, 212, 228, 0.35);
-      font-size: 0.9rem;
+    .install-card__subtitle {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(5, 10, 48, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 1.15rem 0;
+    }
+    .install-step-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .install-card__note {
+      margin: 1.1rem 0 0 0;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .install-cta {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+    .install-cta__hint {
+      margin: 0.9rem 0 0 0;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--muted);
+      max-width: 32rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .install-webapp-box {
+      margin: 1.5rem auto 0;
+      max-width: 32rem;
+      text-align: left;
+      padding: 1.1rem 1.2rem 1.15rem;
+      border-radius: 14px;
+      background: rgba(155, 212, 228, 0.18);
+      border: 1px solid rgba(155, 212, 228, 0.4);
+    }
+    .install-webapp-box h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #050a30;
+      margin: 0 0 0.4rem 0;
+    }
+    .install-webapp-box p {
+      margin: 0;
+      font-size: 0.84rem;
+      line-height: 1.55;
       color: var(--muted);
     }
+    @media (min-width: 900px) {
+      .install-section .section-head { margin-bottom: 1.25rem; }
+    }
+
+    /* ---- Site footer (starry night - same treatment as former Real Talk band) ---- */
+    .site-footer {
+      position: relative;
+      margin-top: 0;
+      overflow: hidden;
+      background: linear-gradient(168deg, #050a30 0%, #03061c 42%, #01030a 100%);
+      border-top: 1px solid rgba(155, 212, 228, 0.1);
+      font-size: 0.9rem;
+      color: rgba(232, 238, 255, 0.88);
+    }
+    .site-footer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% 20%, rgba(60, 100, 140, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 80% 85%, rgba(155, 212, 228, 0.06) 0%, transparent 45%);
+    }
+    .site-footer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 75% 65% at 50% 50%, transparent 35%, rgba(0, 0, 0, 0.45) 100%);
+      opacity: 0.65;
+    }
+    .site-footer__particles {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .site-footer__star {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(155, 212, 228, 0.25) 0%, rgba(155, 212, 228, 0) 70%);
+      animation: footer-star-drift 20s ease-in-out infinite;
+    }
+    .site-footer__sparkle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(220, 245, 255, 0.45);
+      box-shadow: 0 0 6px rgba(155, 212, 228, 0.4);
+      animation: footer-star-drift 14s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .site-footer__star,
+      .site-footer__sparkle { animation: none !important; opacity: 0.5; }
+    }
+    .site-footer__inner,
+    .site-footer__bottom {
+      position: relative;
+      z-index: 1;
+    }
     .site-footer a.site-footer__link {
-      color: var(--navy);
+      color: rgba(223, 246, 251, 0.95);
       text-decoration: none;
       font-weight: 500;
       transition: color 0.2s ease;
@@ -1546,20 +2232,15 @@
     @media (min-width: 900px) {
       .site-footer__brand { align-items: flex-start; }
     }
-    .site-footer__brand img {
-      height: 48px;
+    .site-footer__brand .logo-ring--footer img {
       width: auto;
-      max-width: 220px;
       object-fit: contain;
-    }
-    @media (min-width: 640px) {
-      .site-footer__brand img { height: 52px; max-width: 240px; }
     }
     .site-footer__tagline {
       margin-top: 1rem;
       font-size: 0.82rem;
       line-height: 1.55;
-      color: #5c6478;
+      color: rgba(200, 218, 238, 0.82);
       max-width: 22rem;
     }
     .site-footer__col-title {
@@ -1567,36 +2248,58 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #4a5a6e;
+      color: rgba(155, 212, 228, 0.92);
       margin-bottom: 1.1rem;
     }
     @media (min-width: 900px) {
       .site-footer__col--legal .site-footer__col-title { text-align: left; }
     }
-    .site-footer__emails {
+    .footer-contact {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
       align-items: center;
+      text-align: center;
     }
     @media (min-width: 900px) {
-      .site-footer__emails { align-items: flex-start; }
+      .footer-contact {
+        align-items: flex-start;
+        text-align: left;
+      }
     }
-    .site-footer__email {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+    .footer-contact h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(155, 212, 228, 0.92);
+      margin: 0 0 1.15rem;
+    }
+    .footer-contact__group {
+      margin: 0 0 1.15rem;
+    }
+    .footer-contact__group:last-child {
+      margin-bottom: 0;
+    }
+    .footer-contact__label {
+      margin: 0 0 0.28rem;
       font-size: 0.86rem;
-      line-height: 1.4;
-      color: #3d4a5c;
+      font-weight: 700;
+      line-height: 1.45;
+      color: rgba(175, 200, 222, 0.82);
     }
-    @media (min-width: 900px) {
-      .site-footer__email { justify-content: flex-start; }
+    .footer-contact__email {
+      margin: 0 0 0.35rem;
+      font-size: 0.86rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: rgba(238, 244, 255, 0.96);
     }
-    .site-footer__email svg {
-      flex-shrink: 0;
-      color: #7a92a3;
+    .footer-contact__desc {
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: rgba(200, 218, 238, 0.72);
     }
     .site-footer__legal-list {
       display: flex;
@@ -1613,8 +2316,8 @@
       padding: 1.75rem 1.5rem 2.5rem;
       text-align: center;
       font-size: 0.8rem;
-      color: #7a8698;
-      border-top: 1px solid rgba(155, 212, 228, 0.22);
+      color: rgba(180, 200, 225, 0.65);
+      border-top: 1px solid rgba(155, 212, 228, 0.12);
     }
     @media (min-width: 900px) {
       .site-footer__bottom { padding: 1.75rem 2rem 2.75rem; }
@@ -1626,16 +2329,17 @@
   <div class="wrap">
     <header class="header">
       <div class="container header-inner">
-        <a class="logo-link" href="#top" aria-label="BibleSense home">
-          <img src="./public/BSNewLogotransparent2_512.png" alt="BibleSense" width="320" height="80" />
+        <a class="logo-link logo-ring" href="#top" aria-label="BibleSense home">
+          <img src="./public/BSLogotransparent1_512.png" alt="BibleSense" width="400" height="100" />
         </a>
         <nav class="nav-desktop" aria-label="Main">
           <a href="#features">Features</a>
           <a href="#premium">Premium</a>
-          <a href="#screenshots">Screenshots</a>
+          <a href="#install">How to Install</a>
           <a href="#faq">FAQ</a>
+          <a href="#contact">Contact Us</a>
         </nav>
-        <a class="header-cta btn-pill btn-pill--primary" href="#cta">Download App</a>
+        <a class="header-cta btn-pill btn-pill--primary" href="https://app.biblesense.zencora.org/">Download Now</a>
         <button class="nav-toggle" type="button" id="navToggle" aria-label="Open menu" aria-expanded="false">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 6h16M4 12h16M4 18h16"/>
@@ -1645,9 +2349,10 @@
       <div class="nav-mobile container" id="navMobile" aria-hidden="true">
         <a href="#features">Features</a>
         <a href="#premium">Premium</a>
-        <a href="#screenshots">Screenshots</a>
+        <a href="#install">How to Install</a>
         <a href="#faq">FAQ</a>
-        <a class="btn-pill btn-pill--primary" href="#cta">Download App</a>
+        <a href="#contact">Contact Us</a>
+        <a class="btn-pill btn-pill--primary" href="https://app.biblesense.zencora.org/">Download Now</a>
       </div>
     </header>
 
@@ -1656,43 +2361,18 @@
       <section class="hero">
         <div class="container hero-grid">
           <div>
-            <p class="badge" aria-label="Tagline">✧ YOUR JOURNEY. GOD'S WORD. REAL LIFE.</p>
-            <h1 class="font-serif">Bible, but it actually makes sense.</h1>
-            <p class="lead">Read, reflect, and grow with personalized biblical guidance for real life. You're not alone—God's Word is here.</p>
+            <p class="badge" aria-label="Tagline">REAL LIFE. REAL ANSWERS. GOD&rsquo;S WORD.</p>
+            <h1 class="font-serif">Read it. Get it. Apply it.</h1>
+            <p class="hero-subhead">BibleSense: clarifying Scripture for real life.</p>
+            <p class="hero-intro">This is not not your ordinary Bible app! Experience a new way to engage, read, and truly understand the Bible.</p>
             <div class="hero-btns">
-              <a class="btn-pill btn-pill--primary btn-large" href="#cta">Start Free</a>
-              <a class="btn-pill btn-pill--ghost btn-large" href="#real-talk">Try Real Talk</a>
-            </div>
-            <div class="highlights">
-              <div class="highlight">
-                <span class="hi-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L4 6v6c0 5 3.4 9.2 8 10 4.6-.8 8-5 8-10V6l-8-4z"/></svg>
-                </span>
-                <span>Faith-Focused</span>
-              </div>
-              <div class="highlight">
-                <span class="hi-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M4.93 4.93l2.83 2.83M2 12h4M4.93 19.07l2.83-2.83M12 18v4M16.24 16.24l2.83 2.83M18 12h4M19.07 4.93l-2.83 2.83"/></svg>
-                </span>
-                <span>Real Talk Guidance</span>
-              </div>
-              <div class="highlight">
-                <span class="hi-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
-                </span>
-                <span>Teen &amp; Young Adult Friendly</span>
-              </div>
-              <div class="highlight">
-                <span class="hi-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </span>
-                <span>100% Safe Space</span>
-              </div>
+              <a class="btn-pill btn-pill--primary btn-large" href="https://app.biblesense.zencora.org/">Download Now</a>
+              <p class="hero-cta-note">No credit card &bull; Takes seconds</p>
             </div>
           </div>
           <div class="hero-phones" aria-hidden="true">
             <div class="phone-glow"></div>
-            <!-- SS1 = “Make it make sense” / SS2 = Proverbs reader — swap filenames in public if yours differ -->
+            <!-- SS1 / SS2 - swap filenames in public if yours differ -->
             <div class="phone phone--back">
               <div class="phone-drift">
                 <div class="device-iphone device-iphone--hero">
@@ -1735,7 +2415,7 @@
             </div>
             <div class="hero-badge">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              BUILT FOR REAL LIFE
+              STILL TRUE TODAY
             </div>
           </div>
         </div>
@@ -1744,78 +2424,93 @@
       <!-- CORE FEATURES -->
       <section class="section features" id="features">
         <div class="container">
-          <p class="section-label">Core features</p>
-          <h2 class="section-title font-serif">Everything you need to grow in faith</h2>
-          <p class="section-desc">A complete toolkit to read, reflect, and walk with God—designed to feel as real as your life.</p>
+          <p class="section-label">Features</p>
+          <h2 class="section-title font-serif">Everything you need to understand Scripture clearly</h2>
+          <p class="section-desc">Simple tools designed to help you read, understand, and apply God&rsquo;s Word.</p>
           <div class="feature-grid">
-            <article class="feature-card">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #f0f7ff 0%, #c8dfff 45%, #a8d0f5 100%);">📖</div>
-              <h3>Bible Reader</h3>
-              <p>Multiple translations in a reader built for focus—not rush.</p>
-            </article>
-            <article class="feature-card">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #fff9f0 0%, #f5d4b8 50%, #e8b88a 100%);">🔖</div>
-              <h3>Saved Verses</h3>
-              <p>Your favorites, one tap away—organized and always ready.</p>
-            </article>
-            <article class="feature-card" id="real-talk">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #f0fdf6 0%, #b8e5cc 48%, #7ec9a0 100%);">💬</div>
-              <h3>Real Talk AI</h3>
-              <p>Honest, Scripture-grounded perspective for what you’re facing.</p>
-              <span class="mini-badge">5/month free on Free</span>
-            </article>
-            <article class="feature-card">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #faf5ff 0%, #d4c4f5 50%, #b8a0e8 100%);">🧭</div>
-              <h3>Topics &amp; Help</h3>
-              <p>Help for anxiety, relationships, and identity when you need it most.</p>
-            </article>
-            <article class="feature-card">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #f0f6ff 0%, #a8c8ff 50%, #7eb0f5 100%);">🎓</div>
-              <h3>Bible Studies</h3>
-              <p>Guided lessons and reflection—deeper than a quick scroll.</p>
-            </article>
-            <article class="feature-card">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #fff8f4 0%, #ffd9cc 50%, #f5b8a0 100%);">🙏</div>
+            <article class="feature-card" id="prayer-journal" data-feature="prayer-journal">
+              <div class="feature-icon" aria-hidden="true">
+                <svg class="feature-icon__svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/>
+                </svg>
+              </div>
               <h3>Prayer Journal</h3>
-              <p>Write to God. Trace prayers and see His faithfulness over time.</p>
+              <ul class="feature-bullets">
+                <li>Auto-dated entries to track your prayers</li>
+                <li>Revisit what you prayed and how you felt</li>
+                <li>See when they&rsquo;re answered</li>
+              </ul>
             </article>
-            <article class="feature-card">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #f0fbff 0%, #9bd4e4 52%, #6bc4dc 100%);">🎮</div>
-              <h3>Games</h3>
-              <p>Trivia and memory games—fun, low-pressure, Scripture-centered.</p>
+            <article class="feature-card" data-feature="bible-games">
+              <div class="feature-icon" aria-hidden="true">
+                <svg class="feature-icon__svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01M10 12h4"/><path d="M8 15h8"/>
+                </svg>
+              </div>
+              <h3>Bible Games</h3>
+              <ul class="feature-bullets">
+                <li>Fun, interactive games that reinforce what you learn</li>
+                <li>Stay engaged without feeling like study</li>
+                <li>Light challenges that help truth stick</li>
+              </ul>
             </article>
-            <article class="feature-card">
-              <div class="feature-icon" style="background: linear-gradient(145deg, #faf5ff 0%, #e0d0ff 50%, #c8b0f0 100%);">🎨</div>
-              <h3>Themes</h3>
-              <p>Parchment, midnight, neon—make the app feel unmistakably yours.</p>
+            <article class="feature-card" id="real-talk" data-feature="real-talk">
+              <div class="feature-icon" aria-hidden="true">
+                <svg class="feature-icon__svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+              </div>
+              <h3>Real Talk Guidance</h3>
+              <ul class="feature-bullets">
+                <li>Type what you&rsquo;re going through</li>
+                <li>Get scripture-based direction</li>
+                <li>See exactly where to go in the Bible</li>
+              </ul>
+            </article>
+            <article class="feature-card" data-feature="clear-understanding">
+              <div class="feature-icon" aria-hidden="true">
+                <svg class="feature-icon__svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                </svg>
+              </div>
+              <h3>Clear Understanding</h3>
+              <ul class="feature-bullets">
+                <li>Feel confident in what you&rsquo;re reading</li>
+                <li>No confusion, no guessing</li>
+                <li>Plain-language help when verses feel unclear</li>
+              </ul>
+            </article>
+            <article class="feature-card" data-feature="bible-studies">
+              <div class="feature-icon" aria-hidden="true">
+                <svg class="feature-icon__svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <h3>Bible Studies</h3>
+              <ul class="feature-bullets">
+                <li>Guided, chapter-by-chapter breakdowns</li>
+                <li>Built-in knowledge checks</li>
+                <li>Designed to help it stick</li>
+              </ul>
+            </article>
+            <article class="feature-card feature-card--more">
+              <div class="feature-icon feature-icon--more" aria-hidden="true">
+                <svg class="feature-icon__svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3v4"/><path d="M12 17v4"/><path d="M3 12h4"/><path d="M17 12h4"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </div>
+              <h3>&hellip;And So Much More</h3>
+              <p class="feature-more__desc">More tools, more ways to grow, and more support when you need it, designed to keep you consistent and confident in your walk.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="emotive-real-talk" id="real-life-guidance" aria-labelledby="emotive-title">
-        <div class="emotive-real-talk__particles" id="emotiveParticles" aria-hidden="true"></div>
+      <section class="truth-strip" id="timeless" aria-labelledby="applies-title">
         <div class="container">
-          <h2 id="emotive-title" class="font-serif">Real guidance for real life.</h2>
-          <p class="emotive-lead">
-            Whatever you're facing, BibleSense helps you understand what God says—clearly and simply.
-          </p>
-          <div class="real-talk-mock">
-            <div class="real-talk-mock__icon" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              readonly
-              tabindex="-1"
-              placeholder="I'm dealing with anxiety..."
-              value=""
-              aria-label="Example Real Talk prompt (preview, not connected to the app)"
-            />
-          </div>
-          <p class="emotive-real-talk__note">Preview only — opens in the app</p>
+          <h2 id="applies-title" class="font-serif">The Bible still applies to your life.</h2>
+          <p>Everything people go through today (stress, pressure, relationships, fear): it&rsquo;s all in there. BibleSense helps you connect what you&rsquo;re dealing with to what God already said about it.</p>
+          <p class="core-message__emphasis">You&rsquo;re not the first to go through it, and you don&rsquo;t have to figure it out alone.</p>
         </div>
       </section>
 
@@ -1823,9 +2518,9 @@
       <section class="section" id="screenshots">
         <div class="container">
           <div class="themes-block">
-            <p class="section-label" style="margin-bottom:0.35rem;">Make it yours</p>
-            <h2 class="section-title font-serif">5 Beautiful Themes</h2>
-            <p class="section-desc">Switch your look. Match your mood.</p>
+            <p class="section-label" style="margin-bottom:0.35rem;">Themes</p>
+            <h2 class="section-title font-serif">Make it feel like yours</h2>
+            <p class="section-desc">Choose a style that matches your mood.</p>
             <div class="theme-phones" role="list">
               <div class="theme-item theme-item--classic" role="listitem">
                 <div class="phone-mini device-iphone device-iphone--compact">
@@ -1908,22 +2603,49 @@
       </section>
 
       <!-- TOPICS -->
-      <section class="section" id="topics">
+      <section class="section topics-section" id="topics" aria-labelledby="topics-heading">
         <div class="container">
-          <h2 class="section-title font-serif" style="text-align:center; max-width:none;">Whatever you're facing, there's help for that.</h2>
-          <div class="topic-cloud" role="list">
-            <span class="topic-pill" role="listitem">Anxiety</span>
-            <span class="topic-pill" role="listitem">Fear</span>
-            <span class="topic-pill" role="listitem">Friendship</span>
-            <span class="topic-pill" role="listitem">Peer Pressure</span>
-            <span class="topic-pill" role="listitem">Identity</span>
-            <span class="topic-pill" role="listitem">Anger</span>
-            <span class="topic-pill" role="listitem">Loneliness</span>
-            <span class="topic-pill" role="listitem">Confidence</span>
-            <span class="topic-pill" role="listitem">Forgiveness</span>
-            <span class="topic-pill" role="listitem">Purpose</span>
-            <span class="topic-pill" role="listitem">Self-Worth</span>
-            <span class="topic-pill" role="listitem">Trusting God</span>
+          <div class="topics-wrap">
+            <div class="topics-section__head">
+              <h2 class="section-title font-serif" id="topics-heading">Whatever you&rsquo;re facing, there&rsquo;s a verse for that.</h2>
+              <p class="topics-section__sub">Tap a topic and unlock scripture to help you through whatever you may be facing</p>
+            </div>
+            <div class="topics-panel">
+              <div class="topic-cloud" role="list">
+                <span class="topic-pill" role="listitem">Anxiety</span>
+                <span class="topic-pill" role="listitem">Fear</span>
+                <span class="topic-pill" role="listitem">Friendship</span>
+                <span class="topic-pill" role="listitem">Peer Pressure</span>
+                <span class="topic-pill" role="listitem">Identity</span>
+                <span class="topic-pill" role="listitem">Anger</span>
+                <span class="topic-pill" role="listitem">Loneliness</span>
+                <span class="topic-pill" role="listitem">Confidence</span>
+                <span class="topic-pill" role="listitem">Forgiveness</span>
+                <span class="topic-pill" role="listitem">Purpose</span>
+                <span class="topic-pill" role="listitem">Self-Worth</span>
+                <span class="topic-pill" role="listitem">Trusting God</span>
+              </div>
+            </div>
+            <div class="topics-showcase" aria-labelledby="topics-showcase-lead">
+              <div class="topics-showcase__glow" aria-hidden="true"></div>
+              <div class="topics-showcase__inner">
+                <p class="topics-section__sub topics-showcase__lead" id="topics-showcase-lead">Encouragement tied to scripture</p>
+                <figure class="topics-showcase__device" aria-label="Reflections in the BibleSense app">
+                  <div class="topics-showcase__mockup device-ipad">
+                    <div class="device-ipad__chassis">
+                      <div class="device-ipad__bezel">
+                        <div class="device-ipad__screen">
+                          <div class="device-ipad__camera" aria-hidden="true"></div>
+                          <div class="device-ipad__image">
+                            <img src="./public/ss6.png" alt="Reflections on iPad: browse topic pills including Anger, Friendship, and Self-Worth" width="900" height="1200" loading="lazy" decoding="async" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </figure>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1931,29 +2653,26 @@
       <!-- PRICING -->
       <section class="section" id="premium">
         <div class="container">
-          <p class="section-label">Simple pricing</p>
-          <h2 class="section-title font-serif">Start free. Go premium when you're ready.</h2>
-          <p class="section-desc">No pressure—just a path that grows with you.</p>
+          <p class="section-label">Pricing</p>
+          <h2 class="section-title font-serif">Start free. Grow at your pace.</h2>
+          <p class="section-desc">No pressure. No commitment.</p>
           <div class="pricing-row">
             <div class="price-card">
               <h3>Free</h3>
+              <p class="price-card__tagline">Perfect to get started</p>
               <p class="price-amount">$0 <small>forever</small></p>
               <ul class="price-list">
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Full Bible (KJV)
+                  Full Bible (KJV, ESV)
+                </li>
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Limited Bible studies (John, Romans, James)
                 </li>
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   Limited Saved Verses
-                </li>
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  5 Real Talk Reflections/month
-                </li>
-                <li>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  3 Starter Bible Studies
                 </li>
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1968,12 +2687,13 @@
                   Classic Theme
                 </li>
               </ul>
-              <a class="btn-pill btn-pill--ghost" href="#cta" style="width:100%;">Start Free</a>
+              <a class="btn-pill btn-pill--ghost" href="https://app.biblesense.zencora.org/" style="width:100%;">Download Now</a>
             </div>
             <div class="price-card price-card--featured">
               <span class="best-badge">BEST VALUE</span>
               <h3>Premium</h3>
-              <p class="price-amount">$4.99<small> / month</small><small>or $39.99 / year</small></p>
+              <p class="price-card__tagline">Unlock everything</p>
+              <p class="price-amount">$4.99<small> / month</small><small>or $45.99 / year</small></p>
               <ul class="price-list">
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1981,7 +2701,7 @@
                 </li>
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  Unlimited Real Talk Reflections
+                  Unlimited Real Talk
                 </li>
                 <li>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2006,180 +2726,309 @@
               </ul>
               <a class="btn-pill btn-pill--navy" href="#cta" style="width:100%;">Go Premium</a>
             </div>
-            <div class="price-card price-card--upgrade">
-              <div class="upgrade-icon" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M6 3h12l4 6-10 12L2 9l4-6z"/>
-                  <path d="M11 3h2"/>
-                </svg>
-              </div>
-              <p>Start free. Upgrade anytime. No pressure. Just progress.</p>
-            </div>
           </div>
         </div>
       </section>
 
       <!-- INSTALL -->
-      <section class="section install-section" id="install">
+      <section class="section install-section" id="install" aria-labelledby="install-heading">
         <div class="container">
           <div class="section-head">
-            <p class="section-label">Get the app on your device</p>
-            <h2 class="section-title font-serif">Add BibleSense in a few taps</h2>
-            <p class="section-desc" style="margin: 0 auto;">Same app—on your home screen. Nothing to download from an app store.</p>
-            <p class="install-no-store" role="status">No App Store Needed</p>
+            <p class="section-label">Install</p>
+            <h2 class="section-title font-serif" id="install-heading">Install BibleSense like an app</h2>
+            <p class="section-desc">No app store needed. BibleSense opens from your browser, then saves to your home screen like a regular app.</p>
+            <p class="install-helper">Takes less than a minute.</p>
+            <p class="install-webapp-pill" role="status">Progressive web app &bull; No App Store Needed</p>
           </div>
           <div class="install-grid">
             <article class="install-card">
-              <div class="install-card__top">
-                <div class="install-card__icon" aria-hidden="true">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="5" y="2" width="14" height="20" rx="2" />
-                    <path d="M12 18h.01" />
-                  </svg>
+              <div class="install-card__browser" aria-hidden="true">
+                <div class="install-card__browser-chrome">
+                  <div class="install-card__browser-dots"><span></span><span></span><span></span></div>
+                  <div class="install-card__browser-url">Safari or Chrome</div>
                 </div>
-                <div class="install-card__micro" aria-hidden="true" title="Share, then add">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v14"/></svg>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                <div class="install-card__browser-preview">
+                  <div class="install-card__device-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="5" y="2" width="14" height="20" rx="2"/>
+                      <path d="M12 18h.01"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
-              <h3 class="font-serif">iPhone &amp; iPad</h3>
-              <ol class="install-steps">
-                <li>Open BibleSense in <strong>Safari</strong>.</li>
-                <li>Tap the <strong>Share</strong> button <span aria-hidden="true">(</span>square with arrow up<span aria-hidden="true">)</span>.</li>
-                <li>Scroll and tap <strong>Add to Home Screen</strong>.</li>
-                <li>Tap <strong>Add</strong>—you’re ready to go.</li>
-              </ol>
+              <div class="install-card__body">
+                <h3 class="font-serif">iPhone / iPad</h3>
+                <p class="install-card__subtitle">Great in Safari or Chrome</p>
+                <ul class="install-step-list">
+                  <li>Open BibleSense in Safari or Chrome</li>
+                  <li>Tap the Share button at the bottom of the screen</li>
+                  <li>Scroll and tap &ldquo;Add to Home Screen&rdquo;</li>
+                  <li>Tap &ldquo;Add&rdquo;</li>
+                </ul>
+                <p class="install-card__note">If you don&rsquo;t see it, try the other browser (Safari or Chrome).</p>
+              </div>
             </article>
             <article class="install-card">
-              <div class="install-card__top">
-                <div class="install-card__icon" aria-hidden="true">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <path d="M8 21h8M12 17v4" />
-                  </svg>
+              <div class="install-card__browser" aria-hidden="true">
+                <div class="install-card__browser-chrome">
+                  <div class="install-card__browser-dots"><span></span><span></span><span></span></div>
+                  <div class="install-card__browser-url">Chrome or Safari</div>
                 </div>
-                <div class="install-card__micro" aria-hidden="true" title="Menu, then install">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" /><path d="M12 18h.01" /></svg>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                <div class="install-card__browser-preview">
+                  <div class="install-card__device-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="3" width="20" height="14" rx="2"/>
+                      <path d="M8 21h8M12 17v4"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
-              <h3 class="font-serif">Android</h3>
-              <ol class="install-steps">
-                <li>Open BibleSense in <strong>Chrome</strong>.</li>
-                <li>Tap the <strong>menu</strong> <span aria-hidden="true">(</span>three dots<span aria-hidden="true">)</span> in the corner.</li>
-                <li>Tap <strong>Install</strong> or <strong>Add to Home screen</strong>.</li>
-                <li>Confirm—BibleSense sits with your other apps.</li>
-              </ol>
+              <div class="install-card__body">
+                <h3 class="font-serif">Android</h3>
+                <p class="install-card__subtitle">Great in Chrome</p>
+                <ul class="install-step-list">
+                  <li>Open BibleSense in Chrome</li>
+                  <li>Tap the three-dot menu</li>
+                  <li>Tap &ldquo;Install app&rdquo; or &ldquo;Add to Home screen&rdquo;</li>
+                  <li>Confirm by tapping &ldquo;Install&rdquo; or &ldquo;Add&rdquo;</li>
+                </ul>
+                <p class="install-card__note">The wording may look slightly different depending on your phone.</p>
+              </div>
             </article>
             <article class="install-card">
-              <div class="install-card__top">
-                <div class="install-card__icon" aria-hidden="true">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <path d="M8 21h8" />
-                    <path d="M9 7h6M9 11h4" />
-                  </svg>
+              <div class="install-card__browser" aria-hidden="true">
+                <div class="install-card__browser-chrome">
+                  <div class="install-card__browser-dots"><span></span><span></span><span></span></div>
+                  <div class="install-card__browser-url">Chrome, Safari, or Edge</div>
                 </div>
-                <div class="install-card__micro" aria-hidden="true" title="Install from browser">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v14"/></svg>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                <div class="install-card__browser-preview">
+                  <div class="install-card__device-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="3" width="20" height="14" rx="2"/>
+                      <path d="M8 21h8"/>
+                      <path d="M9 7h6M9 11h4"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
-              <h3 class="font-serif">Computer</h3>
-              <ol class="install-steps">
-                <li>Open BibleSense in <strong>Chrome</strong> or <strong>Edge</strong>.</li>
-                <li>Click the <strong>install</strong> icon in the address bar when you see it.</li>
-                <li>Or use the <strong>menu</strong> and choose <strong>Install BibleSense</strong>.</li>
-                <li>Open it from your desktop or start menu—like any app.</li>
-              </ol>
+              <div class="install-card__body">
+                <h3 class="font-serif">Desktop / Laptop</h3>
+                <p class="install-card__subtitle">Safari, Edge: you&rsquo;re covered</p>
+                <ul class="install-step-list">
+                  <li>Open BibleSense in Chrome or Safari (Edge works well too)</li>
+                  <li>Look for the install icon in the address bar</li>
+                  <li>Click &ldquo;Install&rdquo;</li>
+                  <li>Open BibleSense from your desktop or app list</li>
+                </ul>
+                <p class="install-card__note">If no install icon appears, try Chrome, Safari, or Edge.</p>
+              </div>
             </article>
+          </div>
+          <div class="install-cta">
+            <a class="btn-pill btn-pill--primary btn-large" href="https://app.bibles.zencora.org/">Open BibleSense App</a>
+            <p class="install-cta__hint">After installing, BibleSense will appear on your home screen or app list.</p>
+            <aside class="install-webapp-box" aria-labelledby="webapp-info-title">
+              <h3 id="webapp-info-title">What&rsquo;s a progressive web app?</h3>
+              <p>A progressive web app is a website that can be installed like an app. It gives you a clean app-style experience without needing the App Store.</p>
+            </aside>
           </div>
         </div>
       </section>
 
-      <!-- FAQ (standalone content, no app) -->
-      <section class="section" id="faq" style="padding-top:0;">
-        <div class="container" style="max-width: 720px;">
-          <h2 class="section-title font-serif" style="text-align:center;">FAQ</h2>
-          <div style="margin-top:1.5rem; display:grid; gap:1rem; color:var(--muted); font-size:0.95rem; line-height:1.6;">
-            <p><strong style="color:var(--navy);">Is BibleSense a replacement for church or a pastor?</strong><br/>No. It's a companion for daily study and reflection—your church community still matters.</p>
-            <p><strong style="color:var(--navy);">Do I need a credit card to start?</strong><br/>No. The Free plan includes core features with generous limits to get you started.</p>
-            <p><strong style="color:var(--navy);">Is my data private?</strong><br/>We take privacy seriously. Check our policies on your main site when you publish this page.</p>
+      <!-- FAQ -->
+      <section class="section faq-section" id="faq" aria-labelledby="faq-heading">
+        <div class="container">
+          <header class="faq-head">
+            <p class="section-label">FAQ</p>
+            <h2 class="section-title font-serif" id="faq-heading">Questions? We&rsquo;ve got you.</h2>
+            <p class="faq-subtitle">Quick answers to help you get started with confidence.</p>
+          </header>
+          <div class="faq-accordion">
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>What is BibleSense?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>BibleSense is a Bible app that helps you understand what you&rsquo;re reading as you go, with instant explanations, guided studies, and real-life scripture guidance.</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>Is BibleSense a replacement for church or a pastor?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>No. BibleSense is a tool to support your personal reading and understanding. Your church community and spiritual leaders still matter.</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>How does the Scripture Guidance feature work?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>You can type what you&rsquo;re going through, and BibleSense points you to relevant Scripture and guidance rooted in the Bible. It&rsquo;s designed to help you find direction, not replace wisdom or real conversations.</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>Do I need to download it from the App Store?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>No. BibleSense works right from your browser. You can add it to your home screen in seconds, no app store needed.</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>How do I install it?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p class="faq-install-row"><strong style="color: var(--navy); font-weight: 600;">iPhone:</strong> Tap Share &rarr; Add to Home Screen</p>
+                  <p class="faq-install-row"><strong style="color: var(--navy); font-weight: 600;">Android:</strong> Tap menu &rarr; Install App</p>
+                  <p class="faq-install-row"><strong style="color: var(--navy); font-weight: 600;">Desktop:</strong> Click Install in your browser bar</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>Do I need an account?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>Yes, an account lets you save your progress, journal entries, and personalized experience across devices.</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>What&rsquo;s included in the free version?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>The free plan includes core features with generous limits. Premium unlocks full access to studies, unlimited guidance, and more.</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>Is my information private?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>Yes. Your data is private and never sold. Your reading, journal entries, and activity are stored securely.</p>
+                </div>
+              </div>
+            </details>
+            <details class="faq-item" name="biblesense-faq">
+              <summary class="faq-trigger">
+                <span>Is this safe for younger users?</span>
+                <svg class="faq-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-panel">
+                <div class="faq-answer">
+                  <p>Yes. BibleSense is designed with younger users in mind and focuses on safe, supportive, and scripture-based guidance.</p>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- Parent trust -->
+      <section class="section parent-trust-section" aria-labelledby="parent-trust-heading">
+        <div class="container" style="max-width: 800px;">
+          <div class="parent-trust-inner">
+            <h2 id="parent-trust-heading">Built with families in mind</h2>
+            <p class="parent-trust-lede">BibleSense was created to help younger users engage with Scripture in a way that feels clear, safe, and encouraging.<br />We focus on understanding, not confusion, and guidance that points back to God&rsquo;s Word.</p>
+            <ul class="parent-trust-list">
+              <li><span class="trust-star" aria-hidden="true">&#10022;</span><span>Designed for ages 10+ with safe, supportive guidance</span></li>
+              <li><span class="trust-star" aria-hidden="true">&#10022;</span><span>No selling of personal data, ever</span></li>
+              <li><span class="trust-star" aria-hidden="true">&#10022;</span><span>Scripture-first approach to guidance and learning</span></li>
+              <li><span class="trust-star" aria-hidden="true">&#10022;</span><span>Encourages real-life application, not dependency</span></li>
+              <li><span class="trust-star" aria-hidden="true">&#10022;</span><span>Built to support, not replace, parents, mentors, and church</span></li>
+            </ul>
           </div>
         </div>
       </section>
 
       <!-- FINAL CTA -->
-      <section class="section" id="cta" style="padding-top:0;">
+      <section class="section" id="cta">
         <div class="container">
           <div class="final-cta">
-            <div class="final-cta__bloom" aria-hidden="true"></div>
-            <div class="cta-icon" aria-hidden="true">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.2">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                <path d="M4 4v15.5A2.5 2.5 0 0 0 6.5 22H20V6a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4z"/>
-                <path d="M8 6h8"/>
-                <path d="M8 10h5"/>
-              </svg>
-            </div>
-            <div>
-              <h2 class="font-serif">You don't have to figure life out alone.</h2>
-              <p>God's Word has answers. Let's find them together.</p>
-            </div>
-            <div class="cta-side">
-              <a class="btn-pill btn-pill--primary btn-large" href="#top" style="min-width: 12rem;">Start Your Journey</a>
-              <span class="no-cc">No credit card required</span>
-            </div>
+            <h2 class="final-cta__title font-serif">When life gets confusing, you don&rsquo;t have to figure it out alone.</h2>
+            <p class="final-cta__lede">God&rsquo;s Word has answers. BibleSense helps you find them&mdash;clearly, simply, and in real life.</p>
           </div>
         </div>
       </section>
     </main>
 
+    <div id="featureModal" class="feature-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="featureModalTitle">
+      <div class="feature-modal__backdrop" data-modal-close="true" aria-hidden="true"></div>
+      <div class="feature-modal__panel">
+        <button type="button" class="feature-modal__close" data-modal-close="true" aria-label="Close">&times;</button>
+        <h2 class="feature-modal__title" id="featureModalTitle"></h2>
+        <p class="feature-modal__lede" id="featureModalLede"></p>
+        <ul class="feature-modal__bullets" id="featureModalList"></ul>
+      </div>
+    </div>
+
     <footer class="site-footer" role="contentinfo">
+      <div class="site-footer__particles" id="footerParticles" aria-hidden="true"></div>
       <div class="site-footer__inner">
         <div class="site-footer__brand">
-          <img src="./public/BSNewLogotransparent2_512.png" alt="BibleSense" width="240" height="64" />
-          <p class="site-footer__tagline">BibleSense — Real life. Real answers. Rooted in God&rsquo;s Word.</p>
+          <div class="logo-ring logo-ring--footer">
+            <img src="./public/BSLogotransparent1_512.png" alt="BibleSense" width="300" height="80" />
+          </div>
+          <p class="site-footer__tagline">BibleSense. Real life. Real answers. Rooted in God&rsquo;s Word.</p>
         </div>
-        <div class="site-footer__col site-footer__col--contact">
-          <p class="site-footer__col-title">Contact</p>
-          <div class="site-footer__emails">
-            <p class="site-footer__email">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <path d="M22 6l-10 7L2 6"/>
-              </svg>
-              <span>billing@zencora.org</span>
-            </p>
-            <p class="site-footer__email">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <path d="M22 6l-10 7L2 6"/>
-              </svg>
-              <span>support@zencora.org</span>
-            </p>
-            <p class="site-footer__email">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <path d="M22 6l-10 7L2 6"/>
-              </svg>
-              <span>help@zencora.org</span>
-            </p>
+        <div class="site-footer__col site-footer__col--contact" id="contact">
+          <div class="footer-contact">
+            <h4>Contact</h4>
+
+            <div class="footer-contact__group">
+              <p class="footer-contact__label">Billing:</p>
+              <p class="footer-contact__email">billing@zencora.org</p>
+              <p class="footer-contact__desc">For billing questions, subscriptions, and payments</p>
+            </div>
+
+            <div class="footer-contact__group">
+              <p class="footer-contact__label">Customer Support:</p>
+              <p class="footer-contact__email">support@zencora.org</p>
+              <p class="footer-contact__desc">For account help, general questions, and app support</p>
+            </div>
+
+            <div class="footer-contact__group">
+              <p class="footer-contact__label">Technical Issues:</p>
+              <p class="footer-contact__email">help@zencora.org</p>
+              <p class="footer-contact__desc">For bugs, errors, or things not working correctly</p>
+            </div>
           </div>
         </div>
         <div class="site-footer__col site-footer__col--legal">
           <p class="site-footer__col-title">Legal</p>
           <div class="site-footer__legal-list">
-            <a class="site-footer__link" href="#">Privacy Policy</a>
-            <a class="site-footer__link" href="#">Terms of Service</a>
+            <a class="site-footer__link" href="./privacy.html">Privacy Policy</a>
+            <a class="site-footer__link" href="./terms.html">Terms of Service</a>
           </div>
         </div>
       </div>
       <div class="site-footer__bottom">
-        <p>© 2026 Zencora. All Rights Reserved.</p>
+        <p>© 2026 Zencora. All rights reserved.</p>
       </div>
     </footer>
   </div>
@@ -2188,10 +3037,14 @@
     (function () {
       var root = document.getElementById("particles");
       if (!root) return;
-      for (var i = 0; i < 42; i++) {
+      for (var i = 0; i < 56; i++) {
         var d = document.createElement("div");
-        d.className = Math.random() > 0.65 ? "sparkle" : "particle";
-        d.style.width = d.style.height = (2 + Math.random() * 5) + "px";
+        d.className = Math.random() > 0.28 ? "sparkle" : "particle";
+        if (d.className === "sparkle") {
+          d.style.width = d.style.height = (1 + Math.random() * 2.5) + "px";
+        } else {
+          d.style.width = d.style.height = (3 + Math.random() * 7) + "px";
+        }
         d.style.left = Math.random() * 100 + "%";
         d.style.top = Math.random() * 100 + "%";
         d.style.animationDelay = Math.random() * 12 + "s";
@@ -2200,12 +3053,12 @@
       }
     })();
     (function () {
-      var root = document.getElementById("emotiveParticles");
+      var root = document.getElementById("footerParticles");
       if (!root) return;
       for (var i = 0; i < 38; i++) {
         var d = document.createElement("div");
-        d.className = Math.random() > 0.52 ? "emotive-sparkle" : "emotive-particle";
-        if (d.className === "emotive-particle") {
+        d.className = Math.random() > 0.52 ? "site-footer__sparkle" : "site-footer__star";
+        if (d.className === "site-footer__star") {
           var s = 3 + Math.random() * 8;
           d.style.width = s + "px";
           d.style.height = s + "px";
@@ -2235,19 +3088,116 @@
       });
     })();
     (function () {
-      var pills = document.querySelectorAll("#topics .topic-pill");
-      pills.forEach(function (el) {
-        var l = 0.82 + Math.random() * 0.45;
-        var r = 0.85 + Math.random() * 0.45;
-        if (Math.random() > 0.5) {
-          var t = l;
-          l = r;
-          r = t;
+      var DATA = {
+        "prayer-journal": {
+          title: "Prayer Journal",
+          lede: "Write prayers, track them over time, and mark when God answers.",
+          bullets: [
+            "Auto-dated entries to track your prayers",
+            "Revisit what you prayed and how you felt",
+            "See when they're answered"
+          ]
+        },
+        "bible-games": {
+          title: "Bible Games",
+          lede: "Fun, interactive games that reinforce what you learn, without feeling like study.",
+          bullets: [
+            "Fun, interactive games that reinforce what you learn",
+            "Stay engaged without feeling like study",
+            "Light challenges that help truth stick"
+          ]
+        },
+        "clear-understanding": {
+          title: "Clear Understanding",
+          lede: "Understand what you're reading with clear, simple guidance right when you need it.",
+          bullets: [
+            "Feel confident in what you're reading",
+            "No confusion, no guessing",
+            "Plain-language help when verses feel unclear"
+          ]
+        },
+        "real-talk": {
+          title: "Real Talk: Scripture Guidance",
+          lede: "Type what you\u2019re facing and get scripture-based guidance that points you to where the Bible speaks on it.",
+          bullets: [
+            "Anxiety, pressure, fear, friendship, identity",
+            "Guidance rooted in scripture",
+            "Points users to exact Bible references",
+            "Unlimited with Premium"
+          ]
+        },
+        "bible-studies": {
+          title: "Bible Studies",
+          lede: "Guided studies break scripture into digestible pieces so users can understand, reflect, and remember.",
+          bullets: [
+            "Chapter-by-chapter lessons",
+            "Simple explanations",
+            "Knowledge checks/quizzes",
+            "3 starter studies free",
+            "Full library with Premium"
+          ]
         }
-        el.style.paddingLeft = l.toFixed(2) + "rem";
-        el.style.paddingRight = r.toFixed(2) + "rem";
+      };
+      var modal = document.getElementById("featureModal");
+      var titleEl = document.getElementById("featureModalTitle");
+      var ledeEl = document.getElementById("featureModalLede");
+      var listEl = document.getElementById("featureModalList");
+      var grid = document.querySelector(".feature-grid");
+      var lastFocus = null;
+      if (!modal || !titleEl || !ledeEl || !listEl) return;
+      function openModal(id) {
+        var d = DATA[id];
+        if (!d) return;
+        lastFocus = document.activeElement;
+        titleEl.textContent = d.title;
+        ledeEl.textContent = d.lede;
+        listEl.innerHTML = "";
+        d.bullets.forEach(function (t) {
+          var li = document.createElement("li");
+          li.textContent = t;
+          listEl.appendChild(li);
+        });
+        document.body.classList.add("feature-modal-open");
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        var closeBtn = modal.querySelector(".feature-modal__close");
+        if (closeBtn) closeBtn.focus();
+      }
+      function closeModal() {
+        document.body.classList.remove("feature-modal-open");
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        if (lastFocus && typeof lastFocus.focus === "function") {
+          lastFocus.focus();
+        }
+        lastFocus = null;
+      }
+      if (grid) {
+        grid.addEventListener("click", function (e) {
+          if (e.target.closest("a[href]")) return;
+          var card = e.target.closest(".feature-card");
+          if (!card) return;
+          var id = card.getAttribute("data-feature");
+          if (id) {
+            e.preventDefault();
+            openModal(id);
+          }
+        });
+      }
+      modal.querySelectorAll("[data-modal-close]").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          e.preventDefault();
+          closeModal();
+        });
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal.classList.contains("is-open")) {
+          e.preventDefault();
+          closeModal();
+        }
       });
     })();
   </script>
 </body>
 </html>
+

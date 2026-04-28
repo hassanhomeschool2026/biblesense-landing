@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy | BibleSense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;0,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #050a30;
+      --light-blue: #9bd4e4;
+      --white: #ffffff;
+      --text: #1a1f2e;
+      --muted: #5c6478;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #fbfdfe 0%, #f0f8fb 35%, #ffffff 100%);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(5, 10, 48, 0.06) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      background-position: 0 0, 11px 11px;
+    }
+    .font-serif { font-family: "Playfair Display", Georgia, serif; }
+    .legal-header {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid rgba(155, 212, 228, 0.45);
+      box-shadow: 0 4px 24px rgba(5, 10, 48, 0.06);
+    }
+    .legal-header__inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .legal-header a.logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .legal-header .logo-wrap img {
+      height: 56px;
+      width: auto;
+      max-width: 260px;
+      object-fit: contain;
+      display: block;
+      padding: 0.35rem 0.75rem;
+      background: linear-gradient(180deg, #ffffff 0%, #f6fbff 100%);
+      border-radius: 14px;
+      border: 1px solid rgba(5, 10, 48, 0.1);
+    }
+    @media (min-width: 640px) {
+      .legal-header .logo-wrap img { height: 68px; max-width: 300px; }
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 1.15rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #f2f8fc;
+      text-decoration: none;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #0c1848 0%, #050a30 48%, #020510 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 16px rgba(5, 10, 48, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .btn-back:hover {
+      transform: translateY(-1px);
+      border-color: rgba(155, 212, 228, 0.45);
+      box-shadow: 0 6px 22px rgba(5, 10, 48, 0.28);
+    }
+    .legal-main {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.25rem 1.25rem 3rem;
+    }
+    .legal-main h1 {
+      font-size: clamp(1.85rem, 4vw, 2.35rem);
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .legal-effective {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 1.75rem;
+    }
+    .legal-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 1.35rem 1.35rem 1.4rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(155, 212, 228, 0.45);
+      box-shadow: 0 8px 28px rgba(5, 10, 48, 0.06);
+    }
+    .legal-card h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.65rem;
+      letter-spacing: -0.01em;
+    }
+    .legal-card p,
+    .legal-card li {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .legal-card p + p { margin-top: 0.75rem; }
+    .legal-card ul {
+      margin: 0.65rem 0 0;
+      padding-left: 1.25rem;
+    }
+    .legal-card li { margin-bottom: 0.4rem; color: var(--text); }
+    .legal-card li:last-child { margin-bottom: 0; }
+    .legal-card--intro p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    .legal-card a {
+      color: #050a30;
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-color: rgba(155, 212, 228, 0.95);
+      text-underline-offset: 2px;
+    }
+    .legal-footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem 1.25rem 2.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(155, 212, 228, 0.35);
+      background: rgba(255, 255, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <header class="legal-header">
+    <div class="legal-header__inner">
+      <a class="logo-wrap" href="./index.html" aria-label="BibleSense home">
+        <img src="./public/BSLogotransparent1_512.png" alt="BibleSense" width="300" height="80" />
+      </a>
+      <a class="btn-back" href="./index.html">← Back to BibleSense</a>
+    </div>
+  </header>
+
+  <main class="legal-main">
+    <h1 class="font-serif">Privacy Policy</h1>
+    <p class="legal-effective">Effective date: April 25, 2026</p>
+
+    <article class="legal-card legal-card--intro">
+      <p>At BibleSense, your privacy matters, especially for younger users. We are committed to being transparent about what information we collect, why we collect it, and how we protect it.</p>
+      <p style="margin-top: 0.85rem;">We comply with the Children&rsquo;s Online Privacy Protection Act (COPPA) and applicable privacy laws.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>1. Our Commitment to Your Privacy</h2>
+      <p>At BibleSense, your privacy matters. We designed this app to support Bible study, reflection, and spiritual growth while respecting your personal information.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>2. Information We Collect</h2>
+      <p>We may collect:</p>
+      <ul>
+        <li>Email address</li>
+        <li>Display name, if provided</li>
+        <li>Bible version preference</li>
+        <li>Reading progress and saved verses</li>
+        <li>Prayer journal entries</li>
+        <li>Study progress and quiz results</li>
+        <li>Subscription status</li>
+      </ul>
+      <p style="margin-top: 0.85rem;">We do not collect your full name, phone number, home address, or government ID.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>3. Children Under 13</h2>
+      <p>BibleSense is designed to be safe for users as young as 10. We do not knowingly collect personal information from children under 13 without verifiable parental consent.</p>
+      <p style="margin-top: 0.85rem;">If you believe a child under 13 has created an account without parental consent, contact <a href="mailto:support@zencora.org">support@zencora.org</a> and we will help delete the account.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>4. How We Use Your Information</h2>
+      <p>We use your information to:</p>
+      <ul>
+        <li>Provide and personalize your BibleSense experience</li>
+        <li>Save reading progress, saved verses, and prayer journal entries</li>
+        <li>Track study progress and quiz results</li>
+        <li>Process subscriptions securely</li>
+        <li>Send important account-related emails</li>
+        <li>Improve the app over time</li>
+      </ul>
+      <p style="margin-top: 0.85rem;"><strong>We never sell your personal information. Ever.</strong></p>
+    </article>
+
+    <article class="legal-card">
+      <h2>5. Scripture Guidance Feature and Your Data</h2>
+      <p>When you use the Real Talk: Scripture Guidance Feature, your input is securely processed by a trusted third-party service to generate a scripture-based response.</p>
+      <p style="margin-top: 0.85rem;">We do not permanently store the content of these interactions.</p>
+      <p style="margin-top: 0.85rem;">We recommend avoiding sharing highly sensitive personal information in any digital guidance tool.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>6. Data Storage and Security</h2>
+      <p>Your data is stored securely using our backend services. We use encryption in transit and at rest where available, and privacy controls such as Row Level Security to help protect your information.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>7. Third-Party Services</h2>
+      <p>BibleSense uses trusted third-party services to operate the app:</p>
+      <ul>
+        <li>Supabase for database and authentication</li>
+        <li>Stripe for payment processing</li>
+        <li>OpenAI for scripture-based guidance processing</li>
+        <li>Resend for transactional emails</li>
+      </ul>
+    </article>
+
+    <article class="legal-card">
+      <h2>8. Your Rights</h2>
+      <p>You may request to access, update, or delete your personal information at any time by emailing <a href="mailto:support@zencora.org">support@zencora.org</a>.</p>
+      <p style="margin-top: 0.85rem;">We will process requests within 30 days when reasonably possible.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>9. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. We will notify users of significant changes.</p>
+    </article>
+
+    <article class="legal-card">
+      <h2>10. Contact Us</h2>
+      <p>Questions about your privacy?<br />Email <a href="mailto:support@zencora.org">support@zencora.org</a></p>
+    </article>
+  </main>
+
+  <footer class="legal-footer">
+    <p>© 2026 Zencora. All rights reserved.</p>
+  </footer>
+</body>
+</html>
